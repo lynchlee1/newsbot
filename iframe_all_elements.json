@@ -1,0 +1,2706 @@
+[
+  {
+    "tag": "script",
+    "text": "",
+    "attributes": {
+      "type": "text/javascript",
+      "src": "https://ssl.pstatic.net/imgstock/static.pc/20251111183746/js/jindo.min.ns.1.5.3.euckr.js"
+    },
+    "children": []
+  },
+  {
+    "tag": "script",
+    "text": "var nsc=\"finance.stockend\";\n\nfunction mouseOver(obj){\n  obj.style.backgroundColor=\"#f6f4e5\";\n}\nfunction mouseOut(obj){\n  obj.style.backgroundColor=\"#ffffff\";\n}\nfunction showPannel(layerId){\n\tvar layer = jindo.$(layerId);\n\tlayer.style.display='block';\n\t\n\tif (layerId == \"summary_lyr\") {\n\t\tvar layerHeight = jindo.$Element(layer).height();\n\t\tjindo.$Element(\"summary_ifr\").height(layerHeight);\n\t}\n}\nfunction hidePannel(layerId){\n\tvar layer = jindo.$(layerId);\n\tlayer.style.display='none';\n}\nfunction togglePannel(layerId) {\n\tvar elTargetLayer = jindo.$Element(jindo.$$.getSingle(\"#\" + layerId));\n\t\n\tif (elTargetLayer != null) {\n\t\tif (elTargetLayer.visible()) {\n\t\t\thidePannel(layerId);\n\t\t} else {\n\t\t\tshowPannel(layerId);\n\t\t}\n\t}\n}\nfunction toggleList(classId, clusterId) {\n\tvar up = true;\n\tvar sm = 'entity_id.basic';\n\tif (classId.text == '접기') {\n\t\tif (sm == 'title_entity_id.basic') {\n\t\t\tclickcr(this,'stn.ntitclustclose','','',event);\n\t\t} else {\n\t\t\tclickcr(this,'stn.nbdyclustclose','','',event);\n\t\t}\n\t\tjindo.$Element(classId).html('관련뉴스 <em>' + classId.getAttribute(\"data-count\") + '</em>건 더보기<span class=\"ico_down\"></span>');\n\t\tup = false;\n\t} else {\n\t\tclickcr(this,'stn.ntitclustclose','','',event);\n\t\tif (sm == 'title_entity_id.basic') {\n\t\t\tclickcr(this,'stn.ntitclustmore','','',event);\n\t\t} else {\n\t\t\tclickcr(this,'stn.nbdyclustmore','','',event);\n\t\t}\n\t\tjindo.$Element(classId).html('접기<span class=\"ico_up\"></span>');\n\t}\n\n\tvar height = 0;\n\tif (document.querySelector(\"._clusterId\"+clusterId)) {\n\t\theight = document.querySelector(\"._clusterId\"+clusterId).offsetHeight - 46;\n\t}\n\n\tjindo.$ElementList(jindo.$$(\".hide_news\", classId.parentElement.parentElement.parentElement)).toggleClass('none');\n\n\tif (up) {\n\t\tparentHeightResize();\n\t} else {\n\t\tparentHeightResize(document.body.offsetHeight - height);\n\t}\n}",
+    "attributes": {
+      "language": "JavaScript"
+    },
+    "children": []
+  },
+  {
+    "tag": "script",
+    "text": "",
+    "attributes": {
+      "type": "text/javascript",
+      "src": "https://ssl.pstatic.net/imgstock/static.pc/20251111183746/js/nclktag.js"
+    },
+    "children": []
+  },
+  {
+    "tag": "div",
+    "text": "종목뉴스종목뉴스 안내네이버페이 증권 종목뉴스 안내AI(인공지능 검색기술)을 이용한 종목 관련 뉴스입니다.관련뉴스는 자동으로 묶어 보여줍니다.닫기종목뉴스제목정보제공날짜에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결전자신문2025.11.11 16:00연관기사 목록에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 MOU뉴시스2025.11.11 12:51하이코어, 현대차·현대건설과 나노모빌리티 협업지디넷코리아2025.11.11 12:03에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결이데일리2025.11.11 11:17관련뉴스2건 더보기에브리봇, 네이버 ‘?다세일’ 참가…올인원 로봇청소기 최대 50% 할....이데일리2025.11.07 10:48에브리봇, AI 올인원 로봇청소기 'Q11' 출시지디넷코리아2025.10.28 14:50연관기사 목록에브리봇, AI 올인원 로봇청소기 'Q11' SSG닷컴 30일 론칭이데일리2025.10.28 09:38에브리봇, 나무엑스에 AI 자율주행부 모듈 본격 공급전자신문2025.10.22 14:32연관기사 목록에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 본격 공급서울경제2025.10.22 13:12에브리봇, 'SK 나무엑스' 자율주행부 공급 본격화지디넷코리아2025.10.22 09:47에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 공급이데일리2025.10.22 09:37관련뉴스2건 더보기세계 최초 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시중앙일보2025.10.22 11:21SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시헤럴드경제2025.10.21 11:27정부 'AI 대전환' 투자 소식에…코스닥 로봇株 고공행진 [이런국장 저...서울경제2025.10.21 07:04SK인텔릭스, 웰니스 로봇 '나무엑스' 예약 판매머니S2025.10.20 18:30연관기사 목록SK인텔릭스, '나무엑스'로 AI 웰니스 시대 연다…출격 준비 끝비즈워치2025.10.20 17:28SK인텔릭스, 웰니스 로봇 '나무엑스' 사전 예약 판매 시작아이뉴스242025.10.20 10:22웰니스 로봇 '나무엑스', 사전예약 판매 개시지디넷코리아2025.10.20 09:54SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시조선비즈2025.10.20 09:53SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시아시아경제2025.10.20 09:35SK인텔릭스 웰니스 로봇 나무엑스, 사전 예약 판매 돌입디지털타임스2025.10.20 09:33공기청정부터 건강관리까지…SK인텔릭스, 웰니스로봇 예약판매이데일리2025.10.20 09:24SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시헤럴드경제2025.10.20 08:52관련뉴스7건 더보기오늘의 증시 일정 (10월 21일)매일경제2025.10.20 18:02웰니스 로봇 나무엑스, 사전 예약 판매 시작전자신문2025.10.20 14:13연관기사 목록로봇이 돌아다니며 공기 정화…SK인텔릭스, '나무엑스' 사전예약 판매머니투데이2025.10.20 09:24세계 최초 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시세계일보2025.10.20 08:53관련뉴스1건 더보기페이지 네비게이션12345678910다음맨뒤",
+    "attributes": {
+      "class": [
+        "tb_cont",
+        "_replaceNewsLink"
+      ]
+    },
+    "children": [
+      {
+        "tag": "div",
+        "text": "종목뉴스종목뉴스 안내네이버페이 증권 종목뉴스 안내AI(인공지능 검색기술)을 이용한 종목 관련 뉴스입니다.관련뉴스는 자동으로 묶어 보여줍니다.닫기",
+        "attributes": {
+          "class": [
+            "tlline2"
+          ]
+        },
+        "children": [
+          {
+            "tag": "strong",
+            "text": "종목뉴스",
+            "attributes": {},
+            "children": [
+              {
+                "tag": "span",
+                "text": "종목",
+                "attributes": {
+                  "class": [
+                    "red03"
+                  ]
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "tag": "div",
+            "text": "종목뉴스 안내네이버페이 증권 종목뉴스 안내AI(인공지능 검색기술)을 이용한 종목 관련 뉴스입니다.관련뉴스는 자동으로 묶어 보여줍니다.닫기",
+            "attributes": {
+              "class": [
+                "info_txt"
+              ]
+            },
+            "children": [
+              {
+                "tag": "a",
+                "text": "",
+                "attributes": {
+                  "href": "#",
+                  "onclick": "togglePannel('layer_section'); clickcr(this,'stn.ninfo','','',event); return false;",
+                  "class": [
+                    "btn_info_layer"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "img",
+                    "text": "",
+                    "attributes": {
+                      "src": "https://ssl.pstatic.net/static/nfinance/2017/10/13/btn_help2.png",
+                      "alt": "상세 설명"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "div",
+                "text": "네이버페이 증권 종목뉴스 안내AI(인공지능 검색기술)을 이용한 종목 관련 뉴스입니다.관련뉴스는 자동으로 묶어 보여줍니다.닫기",
+                "attributes": {
+                  "class": [
+                    "layer_section"
+                  ],
+                  "id": "layer_section",
+                  "style": "display:none"
+                },
+                "children": [
+                  {
+                    "tag": "strong",
+                    "text": "네이버페이 증권 종목뉴스 안내",
+                    "attributes": {},
+                    "children": []
+                  },
+                  {
+                    "tag": "p",
+                    "text": "AI(인공지능 검색기술)을 이용한 종목 관련 뉴스입니다.관련뉴스는 자동으로 묶어 보여줍니다.",
+                    "attributes": {
+                      "class": [
+                        "txt"
+                      ]
+                    },
+                    "children": [
+                      {
+                        "tag": "br",
+                        "text": "",
+                        "attributes": {},
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "a",
+                    "text": "닫기",
+                    "attributes": {
+                      "href": "#",
+                      "onclick": "togglePannel('layer_section'); return false;",
+                      "class": [
+                        "btn_close"
+                      ]
+                    },
+                    "children": [
+                      {
+                        "tag": "span",
+                        "text": "닫기",
+                        "attributes": {
+                          "class": [
+                            "blind"
+                          ]
+                        },
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "table",
+        "text": "종목뉴스제목정보제공날짜에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결전자신문2025.11.11 16:00연관기사 목록에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 MOU뉴시스2025.11.11 12:51하이코어, 현대차·현대건설과 나노모빌리티 협업지디넷코리아2025.11.11 12:03에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결이데일리2025.11.11 11:17관련뉴스2건 더보기에브리봇, 네이버 ‘?다세일’ 참가…올인원 로봇청소기 최대 50% 할....이데일리2025.11.07 10:48에브리봇, AI 올인원 로봇청소기 'Q11' 출시지디넷코리아2025.10.28 14:50연관기사 목록에브리봇, AI 올인원 로봇청소기 'Q11' SSG닷컴 30일 론칭이데일리2025.10.28 09:38에브리봇, 나무엑스에 AI 자율주행부 모듈 본격 공급전자신문2025.10.22 14:32연관기사 목록에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 본격 공급서울경제2025.10.22 13:12에브리봇, 'SK 나무엑스' 자율주행부 공급 본격화지디넷코리아2025.10.22 09:47에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 공급이데일리2025.10.22 09:37관련뉴스2건 더보기세계 최초 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시중앙일보2025.10.22 11:21SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시헤럴드경제2025.10.21 11:27정부 'AI 대전환' 투자 소식에…코스닥 로봇株 고공행진 [이런국장 저...서울경제2025.10.21 07:04SK인텔릭스, 웰니스 로봇 '나무엑스' 예약 판매머니S2025.10.20 18:30연관기사 목록SK인텔릭스, '나무엑스'로 AI 웰니스 시대 연다…출격 준비 끝비즈워치2025.10.20 17:28SK인텔릭스, 웰니스 로봇 '나무엑스' 사전 예약 판매 시작아이뉴스242025.10.20 10:22웰니스 로봇 '나무엑스', 사전예약 판매 개시지디넷코리아2025.10.20 09:54SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시조선비즈2025.10.20 09:53SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시아시아경제2025.10.20 09:35SK인텔릭스 웰니스 로봇 나무엑스, 사전 예약 판매 돌입디지털타임스2025.10.20 09:33공기청정부터 건강관리까지…SK인텔릭스, 웰니스로봇 예약판매이데일리2025.10.20 09:24SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시헤럴드경제2025.10.20 08:52관련뉴스7건 더보기오늘의 증시 일정 (10월 21일)매일경제2025.10.20 18:02웰니스 로봇 나무엑스, 사전 예약 판매 시작전자신문2025.10.20 14:13연관기사 목록로봇이 돌아다니며 공기 정화…SK인텔릭스, '나무엑스' 사전예약 판매머니투데이2025.10.20 09:24세계 최초 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시세계일보2025.10.20 08:53관련뉴스1건 더보기",
+        "attributes": {
+          "summary": "종목뉴스의 제목, 정보제공, 날짜",
+          "cellspacing": "0",
+          "class": [
+            "type5"
+          ]
+        },
+        "children": [
+          {
+            "tag": "caption",
+            "text": "종목뉴스",
+            "attributes": {},
+            "children": []
+          },
+          {
+            "tag": "colgroup",
+            "text": "",
+            "attributes": {},
+            "children": [
+              {
+                "tag": "col",
+                "text": "",
+                "attributes": {},
+                "children": []
+              },
+              {
+                "tag": "col",
+                "text": "",
+                "attributes": {
+                  "width": "130px"
+                },
+                "children": []
+              },
+              {
+                "tag": "col",
+                "text": "",
+                "attributes": {
+                  "width": "110px"
+                },
+                "children": []
+              }
+            ]
+          },
+          {
+            "tag": "thead",
+            "text": "제목정보제공날짜",
+            "attributes": {},
+            "children": [
+              {
+                "tag": "tr",
+                "text": "제목정보제공날짜",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "th",
+                    "text": "제목",
+                    "attributes": {
+                      "scope": "col"
+                    },
+                    "children": []
+                  },
+                  {
+                    "tag": "th",
+                    "text": "정보제공",
+                    "attributes": {
+                      "scope": "col"
+                    },
+                    "children": []
+                  },
+                  {
+                    "tag": "th",
+                    "text": "날짜",
+                    "attributes": {
+                      "scope": "col"
+                    },
+                    "children": []
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "tag": "tbody",
+            "text": "에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결전자신문2025.11.11 16:00연관기사 목록에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 MOU뉴시스2025.11.11 12:51하이코어, 현대차·현대건설과 나노모빌리티 협업지디넷코리아2025.11.11 12:03에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결이데일리2025.11.11 11:17관련뉴스2건 더보기에브리봇, 네이버 ‘?다세일’ 참가…올인원 로봇청소기 최대 50% 할....이데일리2025.11.07 10:48에브리봇, AI 올인원 로봇청소기 'Q11' 출시지디넷코리아2025.10.28 14:50연관기사 목록에브리봇, AI 올인원 로봇청소기 'Q11' SSG닷컴 30일 론칭이데일리2025.10.28 09:38에브리봇, 나무엑스에 AI 자율주행부 모듈 본격 공급전자신문2025.10.22 14:32연관기사 목록에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 본격 공급서울경제2025.10.22 13:12에브리봇, 'SK 나무엑스' 자율주행부 공급 본격화지디넷코리아2025.10.22 09:47에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 공급이데일리2025.10.22 09:37관련뉴스2건 더보기세계 최초 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시중앙일보2025.10.22 11:21SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시헤럴드경제2025.10.21 11:27정부 'AI 대전환' 투자 소식에…코스닥 로봇株 고공행진 [이런국장 저...서울경제2025.10.21 07:04SK인텔릭스, 웰니스 로봇 '나무엑스' 예약 판매머니S2025.10.20 18:30연관기사 목록SK인텔릭스, '나무엑스'로 AI 웰니스 시대 연다…출격 준비 끝비즈워치2025.10.20 17:28SK인텔릭스, 웰니스 로봇 '나무엑스' 사전 예약 판매 시작아이뉴스242025.10.20 10:22웰니스 로봇 '나무엑스', 사전예약 판매 개시지디넷코리아2025.10.20 09:54SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시조선비즈2025.10.20 09:53SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시아시아경제2025.10.20 09:35SK인텔릭스 웰니스 로봇 나무엑스, 사전 예약 판매 돌입디지털타임스2025.10.20 09:33공기청정부터 건강관리까지…SK인텔릭스, 웰니스로봇 예약판매이데일리2025.10.20 09:24SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시헤럴드경제2025.10.20 08:52관련뉴스7건 더보기오늘의 증시 일정 (10월 21일)매일경제2025.10.20 18:02웰니스 로봇 나무엑스, 사전 예약 판매 시작전자신문2025.10.20 14:13연관기사 목록로봇이 돌아다니며 공기 정화…SK인텔릭스, '나무엑스' 사전예약 판매머니투데이2025.10.20 09:24세계 최초 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시세계일보2025.10.20 08:53관련뉴스1건 더보기",
+            "attributes": {},
+            "children": [
+              {
+                "tag": "tr",
+                "text": "에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결전자신문2025.11.11 16:00",
+                "attributes": {
+                  "class": [
+                    "first",
+                    "relation_tit"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결",
+                    "attributes": {
+                      "class": [
+                        "title"
+                      ]
+                    },
+                    "children": [
+                      {
+                        "tag": "a",
+                        "text": "에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결",
+                        "attributes": {
+                          "href": "/item/news_read.naver?article_id=0003369062&office_id=030&code=270660&page=&sm=",
+                          "class": [
+                            "tit"
+                          ],
+                          "onclick": "clickcr(this,'stn.nbdyclust','','',event);",
+                          "target": "_top"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "td",
+                    "text": "전자신문",
+                    "attributes": {
+                      "class": [
+                        "info"
+                      ]
+                    },
+                    "children": []
+                  },
+                  {
+                    "tag": "td",
+                    "text": "2025.11.11 16:00",
+                    "attributes": {
+                      "class": [
+                        "date"
+                      ]
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "연관기사 목록에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 MOU뉴시스2025.11.11 12:51하이코어, 현대차·현대건설과 나노모빌리티 협업지디넷코리아2025.11.11 12:03에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결이데일리2025.11.11 11:17관련뉴스2건 더보기",
+                "attributes": {
+                  "class": [
+                    "relation_lst",
+                    "_clusterId0300003369062"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "연관기사 목록에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 MOU뉴시스2025.11.11 12:51하이코어, 현대차·현대건설과 나노모빌리티 협업지디넷코리아2025.11.11 12:03에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결이데일리2025.11.11 11:17관련뉴스2건 더보기",
+                    "attributes": {
+                      "colspan": "3"
+                    },
+                    "children": [
+                      {
+                        "tag": "table",
+                        "text": "연관기사 목록에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 MOU뉴시스2025.11.11 12:51하이코어, 현대차·현대건설과 나노모빌리티 협업지디넷코리아2025.11.11 12:03에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결이데일리2025.11.11 11:17",
+                        "attributes": {
+                          "class": [
+                            "type5"
+                          ]
+                        },
+                        "children": [
+                          {
+                            "tag": "caption",
+                            "text": "연관기사 목록",
+                            "attributes": {},
+                            "children": []
+                          },
+                          {
+                            "tag": "colgroup",
+                            "text": "",
+                            "attributes": {},
+                            "children": [
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {},
+                                "children": []
+                              },
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {
+                                  "width": "130px"
+                                },
+                                "children": []
+                              },
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {
+                                  "width": "110px"
+                                },
+                                "children": []
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "tbody",
+                            "text": "에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 MOU뉴시스2025.11.11 12:51하이코어, 현대차·현대건설과 나노모빌리티 협업지디넷코리아2025.11.11 12:03에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결이데일리2025.11.11 11:17",
+                            "attributes": {},
+                            "children": [
+                              {
+                                "tag": "tr",
+                                "text": "에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 MOU뉴시스2025.11.11 12:51",
+                                "attributes": {},
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 MOU",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 MOU",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0013593243&office_id=003&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "뉴시스",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.11.11 12:51",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "tr",
+                                "text": "하이코어, 현대차·현대건설과 나노모빌리티 협업지디넷코리아2025.11.11 12:03",
+                                "attributes": {
+                                  "class": [
+                                    "hide_news",
+                                    "none"
+                                  ]
+                                },
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "하이코어, 현대차·현대건설과 나노모빌리티 협업",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "하이코어, 현대차·현대건설과 나노모빌리티 협업",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0002397900&office_id=092&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "지디넷코리아",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.11.11 12:03",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "tr",
+                                "text": "에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결이데일리2025.11.11 11:17",
+                                "attributes": {
+                                  "class": [
+                                    "hide_news",
+                                    "none"
+                                  ]
+                                },
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "에브리봇 계열사 하이코어, 현대차그룹과 나노모빌리티 협업 MOU 체결",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0006161599&office_id=018&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "이데일리",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.11.11 11:17",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "text": "관련뉴스2건 더보기",
+                        "attributes": {
+                          "class": [
+                            "link_area"
+                          ]
+                        },
+                        "children": [
+                          {
+                            "tag": "a",
+                            "text": "관련뉴스2건 더보기",
+                            "attributes": {
+                              "href": "#",
+                              "class": [
+                                "_moreBtn"
+                              ],
+                              "onclick": "toggleList(this, '0300003369062'); return false;",
+                              "data-count": "2"
+                            },
+                            "children": [
+                              {
+                                "tag": "em",
+                                "text": "2",
+                                "attributes": {},
+                                "children": []
+                              },
+                              {
+                                "tag": "span",
+                                "text": "",
+                                "attributes": {
+                                  "class": [
+                                    "ico_down"
+                                  ]
+                                },
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "에브리봇, 네이버 ‘?다세일’ 참가…올인원 로봇청소기 최대 50% 할....이데일리2025.11.07 10:48",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "에브리봇, 네이버 ‘?다세일’ 참가…올인원 로봇청소기 최대 50% 할....",
+                    "attributes": {
+                      "class": [
+                        "title"
+                      ]
+                    },
+                    "children": [
+                      {
+                        "tag": "a",
+                        "text": "에브리봇, 네이버 ‘?다세일’ 참가…올인원 로봇청소기 최대 50% 할....",
+                        "attributes": {
+                          "href": "/item/news_read.naver?article_id=0006158381&office_id=018&code=270660&page=&sm=",
+                          "class": [
+                            "tit"
+                          ],
+                          "onclick": "clickcr(this,'stn.nbdyclust','','',event);",
+                          "target": "_top"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "td",
+                    "text": "이데일리",
+                    "attributes": {
+                      "class": [
+                        "info"
+                      ]
+                    },
+                    "children": []
+                  },
+                  {
+                    "tag": "td",
+                    "text": "2025.11.07 10:48",
+                    "attributes": {
+                      "class": [
+                        "date"
+                      ]
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "에브리봇, AI 올인원 로봇청소기 'Q11' 출시지디넷코리아2025.10.28 14:50",
+                "attributes": {
+                  "class": [
+                    "relation_tit"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "에브리봇, AI 올인원 로봇청소기 'Q11' 출시",
+                    "attributes": {
+                      "class": [
+                        "title"
+                      ]
+                    },
+                    "children": [
+                      {
+                        "tag": "a",
+                        "text": "에브리봇, AI 올인원 로봇청소기 'Q11' 출시",
+                        "attributes": {
+                          "href": "/item/news_read.naver?article_id=0002395691&office_id=092&code=270660&page=&sm=",
+                          "class": [
+                            "tit"
+                          ],
+                          "onclick": "clickcr(this,'stn.nbdyclust','','',event);",
+                          "target": "_top"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "td",
+                    "text": "지디넷코리아",
+                    "attributes": {
+                      "class": [
+                        "info"
+                      ]
+                    },
+                    "children": []
+                  },
+                  {
+                    "tag": "td",
+                    "text": "2025.10.28 14:50",
+                    "attributes": {
+                      "class": [
+                        "date"
+                      ]
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "연관기사 목록에브리봇, AI 올인원 로봇청소기 'Q11' SSG닷컴 30일 론칭이데일리2025.10.28 09:38",
+                "attributes": {
+                  "class": [
+                    "relation_lst",
+                    "_clusterId0920002395691"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "연관기사 목록에브리봇, AI 올인원 로봇청소기 'Q11' SSG닷컴 30일 론칭이데일리2025.10.28 09:38",
+                    "attributes": {
+                      "colspan": "3"
+                    },
+                    "children": [
+                      {
+                        "tag": "table",
+                        "text": "연관기사 목록에브리봇, AI 올인원 로봇청소기 'Q11' SSG닷컴 30일 론칭이데일리2025.10.28 09:38",
+                        "attributes": {
+                          "class": [
+                            "type5"
+                          ]
+                        },
+                        "children": [
+                          {
+                            "tag": "caption",
+                            "text": "연관기사 목록",
+                            "attributes": {},
+                            "children": []
+                          },
+                          {
+                            "tag": "colgroup",
+                            "text": "",
+                            "attributes": {},
+                            "children": [
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {},
+                                "children": []
+                              },
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {
+                                  "width": "130px"
+                                },
+                                "children": []
+                              },
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {
+                                  "width": "110px"
+                                },
+                                "children": []
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "tbody",
+                            "text": "에브리봇, AI 올인원 로봇청소기 'Q11' SSG닷컴 30일 론칭이데일리2025.10.28 09:38",
+                            "attributes": {},
+                            "children": [
+                              {
+                                "tag": "tr",
+                                "text": "에브리봇, AI 올인원 로봇청소기 'Q11' SSG닷컴 30일 론칭이데일리2025.10.28 09:38",
+                                "attributes": {},
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "에브리봇, AI 올인원 로봇청소기 'Q11' SSG닷컴 30일 론칭",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "에브리봇, AI 올인원 로봇청소기 'Q11' SSG닷컴 30일 론칭",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0006148915&office_id=018&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "이데일리",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.28 09:38",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "에브리봇, 나무엑스에 AI 자율주행부 모듈 본격 공급전자신문2025.10.22 14:32",
+                "attributes": {
+                  "class": [
+                    "relation_tit"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "에브리봇, 나무엑스에 AI 자율주행부 모듈 본격 공급",
+                    "attributes": {
+                      "class": [
+                        "title"
+                      ]
+                    },
+                    "children": [
+                      {
+                        "tag": "a",
+                        "text": "에브리봇, 나무엑스에 AI 자율주행부 모듈 본격 공급",
+                        "attributes": {
+                          "href": "/item/news_read.naver?article_id=0003361566&office_id=030&code=270660&page=&sm=",
+                          "class": [
+                            "tit"
+                          ],
+                          "onclick": "clickcr(this,'stn.nbdyclust','','',event);",
+                          "target": "_top"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "td",
+                    "text": "전자신문",
+                    "attributes": {
+                      "class": [
+                        "info"
+                      ]
+                    },
+                    "children": []
+                  },
+                  {
+                    "tag": "td",
+                    "text": "2025.10.22 14:32",
+                    "attributes": {
+                      "class": [
+                        "date"
+                      ]
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "연관기사 목록에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 본격 공급서울경제2025.10.22 13:12에브리봇, 'SK 나무엑스' 자율주행부 공급 본격화지디넷코리아2025.10.22 09:47에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 공급이데일리2025.10.22 09:37관련뉴스2건 더보기",
+                "attributes": {
+                  "class": [
+                    "relation_lst",
+                    "_clusterId0300003361566"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "연관기사 목록에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 본격 공급서울경제2025.10.22 13:12에브리봇, 'SK 나무엑스' 자율주행부 공급 본격화지디넷코리아2025.10.22 09:47에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 공급이데일리2025.10.22 09:37관련뉴스2건 더보기",
+                    "attributes": {
+                      "colspan": "3"
+                    },
+                    "children": [
+                      {
+                        "tag": "table",
+                        "text": "연관기사 목록에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 본격 공급서울경제2025.10.22 13:12에브리봇, 'SK 나무엑스' 자율주행부 공급 본격화지디넷코리아2025.10.22 09:47에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 공급이데일리2025.10.22 09:37",
+                        "attributes": {
+                          "class": [
+                            "type5"
+                          ]
+                        },
+                        "children": [
+                          {
+                            "tag": "caption",
+                            "text": "연관기사 목록",
+                            "attributes": {},
+                            "children": []
+                          },
+                          {
+                            "tag": "colgroup",
+                            "text": "",
+                            "attributes": {},
+                            "children": [
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {},
+                                "children": []
+                              },
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {
+                                  "width": "130px"
+                                },
+                                "children": []
+                              },
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {
+                                  "width": "110px"
+                                },
+                                "children": []
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "tbody",
+                            "text": "에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 본격 공급서울경제2025.10.22 13:12에브리봇, 'SK 나무엑스' 자율주행부 공급 본격화지디넷코리아2025.10.22 09:47에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 공급이데일리2025.10.22 09:37",
+                            "attributes": {},
+                            "children": [
+                              {
+                                "tag": "tr",
+                                "text": "에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 본격 공급서울경제2025.10.22 13:12",
+                                "attributes": {},
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 본격 공급",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 본격 공급",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0004546343&office_id=011&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "서울경제",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.22 13:12",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "tr",
+                                "text": "에브리봇, 'SK 나무엑스' 자율주행부 공급 본격화지디넷코리아2025.10.22 09:47",
+                                "attributes": {
+                                  "class": [
+                                    "hide_news",
+                                    "none"
+                                  ]
+                                },
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "에브리봇, 'SK 나무엑스' 자율주행부 공급 본격화",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "에브리봇, 'SK 나무엑스' 자율주행부 공급 본격화",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0002394875&office_id=092&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "지디넷코리아",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.22 09:47",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "tr",
+                                "text": "에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 공급이데일리2025.10.22 09:37",
+                                "attributes": {
+                                  "class": [
+                                    "hide_news",
+                                    "none"
+                                  ]
+                                },
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 공급",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "에브리봇, SK인텔릭스 ‘나무엑스’ 로봇에 AI자율주행부 공급",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0006143783&office_id=018&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "이데일리",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.22 09:37",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "text": "관련뉴스2건 더보기",
+                        "attributes": {
+                          "class": [
+                            "link_area"
+                          ]
+                        },
+                        "children": [
+                          {
+                            "tag": "a",
+                            "text": "관련뉴스2건 더보기",
+                            "attributes": {
+                              "href": "#",
+                              "class": [
+                                "_moreBtn"
+                              ],
+                              "onclick": "toggleList(this, '0300003361566'); return false;",
+                              "data-count": "2"
+                            },
+                            "children": [
+                              {
+                                "tag": "em",
+                                "text": "2",
+                                "attributes": {},
+                                "children": []
+                              },
+                              {
+                                "tag": "span",
+                                "text": "",
+                                "attributes": {
+                                  "class": [
+                                    "ico_down"
+                                  ]
+                                },
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "세계 최초 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시중앙일보2025.10.22 11:21",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "세계 최초 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시",
+                    "attributes": {
+                      "class": [
+                        "title"
+                      ]
+                    },
+                    "children": [
+                      {
+                        "tag": "a",
+                        "text": "세계 최초 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시",
+                        "attributes": {
+                          "href": "/item/news_read.naver?article_id=0003477012&office_id=025&code=270660&page=&sm=",
+                          "class": [
+                            "tit"
+                          ],
+                          "onclick": "clickcr(this,'stn.nbdyclust','','',event);",
+                          "target": "_top"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "td",
+                    "text": "중앙일보",
+                    "attributes": {
+                      "class": [
+                        "info"
+                      ]
+                    },
+                    "children": []
+                  },
+                  {
+                    "tag": "td",
+                    "text": "2025.10.22 11:21",
+                    "attributes": {
+                      "class": [
+                        "date"
+                      ]
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시헤럴드경제2025.10.21 11:27",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시",
+                    "attributes": {
+                      "class": [
+                        "title"
+                      ]
+                    },
+                    "children": [
+                      {
+                        "tag": "a",
+                        "text": "SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시",
+                        "attributes": {
+                          "href": "/item/news_read.naver?article_id=0002544953&office_id=016&code=270660&page=&sm=",
+                          "class": [
+                            "tit"
+                          ],
+                          "onclick": "clickcr(this,'stn.nbdyclust','','',event);",
+                          "target": "_top"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "td",
+                    "text": "헤럴드경제",
+                    "attributes": {
+                      "class": [
+                        "info"
+                      ]
+                    },
+                    "children": []
+                  },
+                  {
+                    "tag": "td",
+                    "text": "2025.10.21 11:27",
+                    "attributes": {
+                      "class": [
+                        "date"
+                      ]
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "정부 'AI 대전환' 투자 소식에…코스닥 로봇株 고공행진 [이런국장 저...서울경제2025.10.21 07:04",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "정부 'AI 대전환' 투자 소식에…코스닥 로봇株 고공행진 [이런국장 저...",
+                    "attributes": {
+                      "class": [
+                        "title"
+                      ]
+                    },
+                    "children": [
+                      {
+                        "tag": "a",
+                        "text": "정부 'AI 대전환' 투자 소식에…코스닥 로봇株 고공행진 [이런국장 저...",
+                        "attributes": {
+                          "href": "/item/news_read.naver?article_id=0004545676&office_id=011&code=270660&page=&sm=",
+                          "class": [
+                            "tit"
+                          ],
+                          "onclick": "clickcr(this,'stn.nbdyclust','','',event);",
+                          "target": "_top"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "td",
+                    "text": "서울경제",
+                    "attributes": {
+                      "class": [
+                        "info"
+                      ]
+                    },
+                    "children": []
+                  },
+                  {
+                    "tag": "td",
+                    "text": "2025.10.21 07:04",
+                    "attributes": {
+                      "class": [
+                        "date"
+                      ]
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "SK인텔릭스, 웰니스 로봇 '나무엑스' 예약 판매머니S2025.10.20 18:30",
+                "attributes": {
+                  "class": [
+                    "relation_tit"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "SK인텔릭스, 웰니스 로봇 '나무엑스' 예약 판매",
+                    "attributes": {
+                      "class": [
+                        "title"
+                      ]
+                    },
+                    "children": [
+                      {
+                        "tag": "a",
+                        "text": "SK인텔릭스, 웰니스 로봇 '나무엑스' 예약 판매",
+                        "attributes": {
+                          "href": "/item/news_read.naver?article_id=0001107726&office_id=417&code=270660&page=&sm=",
+                          "class": [
+                            "tit"
+                          ],
+                          "onclick": "clickcr(this,'stn.nbdyclust','','',event);",
+                          "target": "_top"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "td",
+                    "text": "머니S",
+                    "attributes": {
+                      "class": [
+                        "info"
+                      ]
+                    },
+                    "children": []
+                  },
+                  {
+                    "tag": "td",
+                    "text": "2025.10.20 18:30",
+                    "attributes": {
+                      "class": [
+                        "date"
+                      ]
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "연관기사 목록SK인텔릭스, '나무엑스'로 AI 웰니스 시대 연다…출격 준비 끝비즈워치2025.10.20 17:28SK인텔릭스, 웰니스 로봇 '나무엑스' 사전 예약 판매 시작아이뉴스242025.10.20 10:22웰니스 로봇 '나무엑스', 사전예약 판매 개시지디넷코리아2025.10.20 09:54SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시조선비즈2025.10.20 09:53SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시아시아경제2025.10.20 09:35SK인텔릭스 웰니스 로봇 나무엑스, 사전 예약 판매 돌입디지털타임스2025.10.20 09:33공기청정부터 건강관리까지…SK인텔릭스, 웰니스로봇 예약판매이데일리2025.10.20 09:24SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시헤럴드경제2025.10.20 08:52관련뉴스7건 더보기",
+                "attributes": {
+                  "class": [
+                    "relation_lst",
+                    "_clusterId4170001107726"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "연관기사 목록SK인텔릭스, '나무엑스'로 AI 웰니스 시대 연다…출격 준비 끝비즈워치2025.10.20 17:28SK인텔릭스, 웰니스 로봇 '나무엑스' 사전 예약 판매 시작아이뉴스242025.10.20 10:22웰니스 로봇 '나무엑스', 사전예약 판매 개시지디넷코리아2025.10.20 09:54SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시조선비즈2025.10.20 09:53SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시아시아경제2025.10.20 09:35SK인텔릭스 웰니스 로봇 나무엑스, 사전 예약 판매 돌입디지털타임스2025.10.20 09:33공기청정부터 건강관리까지…SK인텔릭스, 웰니스로봇 예약판매이데일리2025.10.20 09:24SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시헤럴드경제2025.10.20 08:52관련뉴스7건 더보기",
+                    "attributes": {
+                      "colspan": "3"
+                    },
+                    "children": [
+                      {
+                        "tag": "table",
+                        "text": "연관기사 목록SK인텔릭스, '나무엑스'로 AI 웰니스 시대 연다…출격 준비 끝비즈워치2025.10.20 17:28SK인텔릭스, 웰니스 로봇 '나무엑스' 사전 예약 판매 시작아이뉴스242025.10.20 10:22웰니스 로봇 '나무엑스', 사전예약 판매 개시지디넷코리아2025.10.20 09:54SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시조선비즈2025.10.20 09:53SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시아시아경제2025.10.20 09:35SK인텔릭스 웰니스 로봇 나무엑스, 사전 예약 판매 돌입디지털타임스2025.10.20 09:33공기청정부터 건강관리까지…SK인텔릭스, 웰니스로봇 예약판매이데일리2025.10.20 09:24SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시헤럴드경제2025.10.20 08:52",
+                        "attributes": {
+                          "class": [
+                            "type5"
+                          ]
+                        },
+                        "children": [
+                          {
+                            "tag": "caption",
+                            "text": "연관기사 목록",
+                            "attributes": {},
+                            "children": []
+                          },
+                          {
+                            "tag": "colgroup",
+                            "text": "",
+                            "attributes": {},
+                            "children": [
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {},
+                                "children": []
+                              },
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {
+                                  "width": "130px"
+                                },
+                                "children": []
+                              },
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {
+                                  "width": "110px"
+                                },
+                                "children": []
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "tbody",
+                            "text": "SK인텔릭스, '나무엑스'로 AI 웰니스 시대 연다…출격 준비 끝비즈워치2025.10.20 17:28SK인텔릭스, 웰니스 로봇 '나무엑스' 사전 예약 판매 시작아이뉴스242025.10.20 10:22웰니스 로봇 '나무엑스', 사전예약 판매 개시지디넷코리아2025.10.20 09:54SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시조선비즈2025.10.20 09:53SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시아시아경제2025.10.20 09:35SK인텔릭스 웰니스 로봇 나무엑스, 사전 예약 판매 돌입디지털타임스2025.10.20 09:33공기청정부터 건강관리까지…SK인텔릭스, 웰니스로봇 예약판매이데일리2025.10.20 09:24SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시헤럴드경제2025.10.20 08:52",
+                            "attributes": {},
+                            "children": [
+                              {
+                                "tag": "tr",
+                                "text": "SK인텔릭스, '나무엑스'로 AI 웰니스 시대 연다…출격 준비 끝비즈워치2025.10.20 17:28",
+                                "attributes": {},
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "SK인텔릭스, '나무엑스'로 AI 웰니스 시대 연다…출격 준비 끝",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "SK인텔릭스, '나무엑스'로 AI 웰니스 시대 연다…출격 준비 끝",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0000040865&office_id=648&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "비즈워치",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.20 17:28",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "tr",
+                                "text": "SK인텔릭스, 웰니스 로봇 '나무엑스' 사전 예약 판매 시작아이뉴스242025.10.20 10:22",
+                                "attributes": {
+                                  "class": [
+                                    "hide_news",
+                                    "none"
+                                  ]
+                                },
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "SK인텔릭스, 웰니스 로봇 '나무엑스' 사전 예약 판매 시작",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "SK인텔릭스, 웰니스 로봇 '나무엑스' 사전 예약 판매 시작",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0000973110&office_id=031&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "아이뉴스24",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.20 10:22",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "tr",
+                                "text": "웰니스 로봇 '나무엑스', 사전예약 판매 개시지디넷코리아2025.10.20 09:54",
+                                "attributes": {
+                                  "class": [
+                                    "hide_news",
+                                    "none"
+                                  ]
+                                },
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "웰니스 로봇 '나무엑스', 사전예약 판매 개시",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "웰니스 로봇 '나무엑스', 사전예약 판매 개시",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0002394495&office_id=092&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "지디넷코리아",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.20 09:54",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "tr",
+                                "text": "SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시조선비즈2025.10.20 09:53",
+                                "attributes": {
+                                  "class": [
+                                    "hide_news",
+                                    "none"
+                                  ]
+                                },
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0001115755&office_id=366&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "조선비즈",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.20 09:53",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "tr",
+                                "text": "SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시아시아경제2025.10.20 09:35",
+                                "attributes": {
+                                  "class": [
+                                    "hide_news",
+                                    "none"
+                                  ]
+                                },
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "SK인텔릭스, 웰니스 로봇 ‘나무엑스’ 사전 예약 판매 개시",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0005666585&office_id=277&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "아시아경제",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.20 09:35",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "tr",
+                                "text": "SK인텔릭스 웰니스 로봇 나무엑스, 사전 예약 판매 돌입디지털타임스2025.10.20 09:33",
+                                "attributes": {
+                                  "class": [
+                                    "hide_news",
+                                    "none"
+                                  ]
+                                },
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "SK인텔릭스 웰니스 로봇 나무엑스, 사전 예약 판매 돌입",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "SK인텔릭스 웰니스 로봇 나무엑스, 사전 예약 판매 돌입",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0002987995&office_id=029&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "디지털타임스",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.20 09:33",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "tr",
+                                "text": "공기청정부터 건강관리까지…SK인텔릭스, 웰니스로봇 예약판매이데일리2025.10.20 09:24",
+                                "attributes": {
+                                  "class": [
+                                    "hide_news",
+                                    "none"
+                                  ]
+                                },
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "공기청정부터 건강관리까지…SK인텔릭스, 웰니스로봇 예약판매",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "공기청정부터 건강관리까지…SK인텔릭스, 웰니스로봇 예약판매",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0006142062&office_id=018&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "이데일리",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.20 09:24",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "tr",
+                                "text": "SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시헤럴드경제2025.10.20 08:52",
+                                "attributes": {
+                                  "class": [
+                                    "hide_news",
+                                    "none"
+                                  ]
+                                },
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "SK인텔릭스 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0002544079&office_id=016&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "헤럴드경제",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.20 08:52",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "text": "관련뉴스7건 더보기",
+                        "attributes": {
+                          "class": [
+                            "link_area"
+                          ]
+                        },
+                        "children": [
+                          {
+                            "tag": "a",
+                            "text": "관련뉴스7건 더보기",
+                            "attributes": {
+                              "href": "#",
+                              "class": [
+                                "_moreBtn"
+                              ],
+                              "onclick": "toggleList(this, '4170001107726'); return false;",
+                              "data-count": "7"
+                            },
+                            "children": [
+                              {
+                                "tag": "em",
+                                "text": "7",
+                                "attributes": {},
+                                "children": []
+                              },
+                              {
+                                "tag": "span",
+                                "text": "",
+                                "attributes": {
+                                  "class": [
+                                    "ico_down"
+                                  ]
+                                },
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "오늘의 증시 일정 (10월 21일)매일경제2025.10.20 18:02",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "오늘의 증시 일정 (10월 21일)",
+                    "attributes": {
+                      "class": [
+                        "title"
+                      ]
+                    },
+                    "children": [
+                      {
+                        "tag": "a",
+                        "text": "오늘의 증시 일정 (10월 21일)",
+                        "attributes": {
+                          "href": "/item/news_read.naver?article_id=0005575970&office_id=009&code=270660&page=&sm=",
+                          "class": [
+                            "tit"
+                          ],
+                          "onclick": "clickcr(this,'stn.nbdyclust','','',event);",
+                          "target": "_top"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "td",
+                    "text": "매일경제",
+                    "attributes": {
+                      "class": [
+                        "info"
+                      ]
+                    },
+                    "children": []
+                  },
+                  {
+                    "tag": "td",
+                    "text": "2025.10.20 18:02",
+                    "attributes": {
+                      "class": [
+                        "date"
+                      ]
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "웰니스 로봇 나무엑스, 사전 예약 판매 시작전자신문2025.10.20 14:13",
+                "attributes": {
+                  "class": [
+                    "relation_tit"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "웰니스 로봇 나무엑스, 사전 예약 판매 시작",
+                    "attributes": {
+                      "class": [
+                        "title"
+                      ]
+                    },
+                    "children": [
+                      {
+                        "tag": "a",
+                        "text": "웰니스 로봇 나무엑스, 사전 예약 판매 시작",
+                        "attributes": {
+                          "href": "/item/news_read.naver?article_id=0003360610&office_id=030&code=270660&page=&sm=",
+                          "class": [
+                            "tit"
+                          ],
+                          "onclick": "clickcr(this,'stn.nbdyclust','','',event);",
+                          "target": "_top"
+                        },
+                        "children": []
+                      }
+                    ]
+                  },
+                  {
+                    "tag": "td",
+                    "text": "전자신문",
+                    "attributes": {
+                      "class": [
+                        "info"
+                      ]
+                    },
+                    "children": []
+                  },
+                  {
+                    "tag": "td",
+                    "text": "2025.10.20 14:13",
+                    "attributes": {
+                      "class": [
+                        "date"
+                      ]
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "tr",
+                "text": "연관기사 목록로봇이 돌아다니며 공기 정화…SK인텔릭스, '나무엑스' 사전예약 판매머니투데이2025.10.20 09:24세계 최초 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시세계일보2025.10.20 08:53관련뉴스1건 더보기",
+                "attributes": {
+                  "class": [
+                    "relation_lst",
+                    "_clusterId0300003360610"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "td",
+                    "text": "연관기사 목록로봇이 돌아다니며 공기 정화…SK인텔릭스, '나무엑스' 사전예약 판매머니투데이2025.10.20 09:24세계 최초 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시세계일보2025.10.20 08:53관련뉴스1건 더보기",
+                    "attributes": {
+                      "colspan": "3"
+                    },
+                    "children": [
+                      {
+                        "tag": "table",
+                        "text": "연관기사 목록로봇이 돌아다니며 공기 정화…SK인텔릭스, '나무엑스' 사전예약 판매머니투데이2025.10.20 09:24세계 최초 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시세계일보2025.10.20 08:53",
+                        "attributes": {
+                          "class": [
+                            "type5"
+                          ]
+                        },
+                        "children": [
+                          {
+                            "tag": "caption",
+                            "text": "연관기사 목록",
+                            "attributes": {},
+                            "children": []
+                          },
+                          {
+                            "tag": "colgroup",
+                            "text": "",
+                            "attributes": {},
+                            "children": [
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {},
+                                "children": []
+                              },
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {
+                                  "width": "130px"
+                                },
+                                "children": []
+                              },
+                              {
+                                "tag": "col",
+                                "text": "",
+                                "attributes": {
+                                  "width": "110px"
+                                },
+                                "children": []
+                              }
+                            ]
+                          },
+                          {
+                            "tag": "tbody",
+                            "text": "로봇이 돌아다니며 공기 정화…SK인텔릭스, '나무엑스' 사전예약 판매머니투데이2025.10.20 09:24세계 최초 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시세계일보2025.10.20 08:53",
+                            "attributes": {},
+                            "children": [
+                              {
+                                "tag": "tr",
+                                "text": "로봇이 돌아다니며 공기 정화…SK인텔릭스, '나무엑스' 사전예약 판매머니투데이2025.10.20 09:24",
+                                "attributes": {
+                                  "class": [
+                                    "last"
+                                  ]
+                                },
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "로봇이 돌아다니며 공기 정화…SK인텔릭스, '나무엑스' 사전예약 판매",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "로봇이 돌아다니며 공기 정화…SK인텔릭스, '나무엑스' 사전예약 판매",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0005265073&office_id=008&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "머니투데이",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.20 09:24",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              },
+                              {
+                                "tag": "tr",
+                                "text": "세계 최초 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시세계일보2025.10.20 08:53",
+                                "attributes": {
+                                  "class": [
+                                    "hide_news",
+                                    "none"
+                                  ]
+                                },
+                                "children": [
+                                  {
+                                    "tag": "td",
+                                    "text": "세계 최초 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시",
+                                    "attributes": {
+                                      "class": [
+                                        "title"
+                                      ]
+                                    },
+                                    "children": [
+                                      {
+                                        "tag": "a",
+                                        "text": "세계 최초 웰니스 로봇 ‘나무엑스’, 사전 예약 판매 개시",
+                                        "attributes": {
+                                          "href": "/item/news_read.naver?article_id=0004076171&office_id=022&code=270660&page=&sm=",
+                                          "class": [
+                                            "tit"
+                                          ],
+                                          "onclick": "clickcr(this,'stn.nbdyclustsub','','',event);",
+                                          "target": "_top"
+                                        },
+                                        "children": [
+                                          {
+                                            "tag": "span",
+                                            "text": "",
+                                            "attributes": {
+                                              "class": [
+                                                "ico_reply"
+                                              ]
+                                            },
+                                            "children": []
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "세계일보",
+                                    "attributes": {
+                                      "class": [
+                                        "info"
+                                      ]
+                                    },
+                                    "children": []
+                                  },
+                                  {
+                                    "tag": "td",
+                                    "text": "2025.10.20 08:53",
+                                    "attributes": {
+                                      "class": [
+                                        "date"
+                                      ]
+                                    },
+                                    "children": []
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "tag": "div",
+                        "text": "관련뉴스1건 더보기",
+                        "attributes": {
+                          "class": [
+                            "link_area"
+                          ]
+                        },
+                        "children": [
+                          {
+                            "tag": "a",
+                            "text": "관련뉴스1건 더보기",
+                            "attributes": {
+                              "href": "#",
+                              "class": [
+                                "_moreBtn"
+                              ],
+                              "onclick": "toggleList(this, '0300003360610'); return false;",
+                              "data-count": "1"
+                            },
+                            "children": [
+                              {
+                                "tag": "em",
+                                "text": "1",
+                                "attributes": {},
+                                "children": []
+                              },
+                              {
+                                "tag": "span",
+                                "text": "",
+                                "attributes": {
+                                  "class": [
+                                    "ico_down"
+                                  ]
+                                },
+                                "children": []
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "table",
+        "text": "페이지 네비게이션12345678910다음맨뒤",
+        "attributes": {
+          "summary": "페이지 네비게이션 리스트",
+          "class": [
+            "Nnavi"
+          ],
+          "align": "center"
+        },
+        "children": [
+          {
+            "tag": "caption",
+            "text": "페이지 네비게이션",
+            "attributes": {},
+            "children": []
+          },
+          {
+            "tag": "tr",
+            "text": "12345678910다음맨뒤",
+            "attributes": {},
+            "children": [
+              {
+                "tag": "td",
+                "text": "1",
+                "attributes": {
+                  "class": [
+                    "on"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "a",
+                    "text": "1",
+                    "attributes": {
+                      "href": "/item/news_news.naver?code=270660&page=1&clusterId=",
+                      "onclick": "clickcr(this,'stn.npag','','',event);"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "td",
+                "text": "2",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "a",
+                    "text": "2",
+                    "attributes": {
+                      "href": "/item/news_news.naver?code=270660&page=2&clusterId=",
+                      "onclick": "clickcr(this,'stn.npag','','',event);"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "td",
+                "text": "3",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "a",
+                    "text": "3",
+                    "attributes": {
+                      "href": "/item/news_news.naver?code=270660&page=3&clusterId=",
+                      "onclick": "clickcr(this,'stn.npag','','',event);"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "td",
+                "text": "4",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "a",
+                    "text": "4",
+                    "attributes": {
+                      "href": "/item/news_news.naver?code=270660&page=4&clusterId=",
+                      "onclick": "clickcr(this,'stn.npag','','',event);"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "td",
+                "text": "5",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "a",
+                    "text": "5",
+                    "attributes": {
+                      "href": "/item/news_news.naver?code=270660&page=5&clusterId=",
+                      "onclick": "clickcr(this,'stn.npag','','',event);"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "td",
+                "text": "6",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "a",
+                    "text": "6",
+                    "attributes": {
+                      "href": "/item/news_news.naver?code=270660&page=6&clusterId=",
+                      "onclick": "clickcr(this,'stn.npag','','',event);"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "td",
+                "text": "7",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "a",
+                    "text": "7",
+                    "attributes": {
+                      "href": "/item/news_news.naver?code=270660&page=7&clusterId=",
+                      "onclick": "clickcr(this,'stn.npag','','',event);"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "td",
+                "text": "8",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "a",
+                    "text": "8",
+                    "attributes": {
+                      "href": "/item/news_news.naver?code=270660&page=8&clusterId=",
+                      "onclick": "clickcr(this,'stn.npag','','',event);"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "td",
+                "text": "9",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "a",
+                    "text": "9",
+                    "attributes": {
+                      "href": "/item/news_news.naver?code=270660&page=9&clusterId=",
+                      "onclick": "clickcr(this,'stn.npag','','',event);"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "td",
+                "text": "10",
+                "attributes": {},
+                "children": [
+                  {
+                    "tag": "a",
+                    "text": "10",
+                    "attributes": {
+                      "href": "/item/news_news.naver?code=270660&page=10&clusterId=",
+                      "onclick": "clickcr(this,'stn.npag','','',event);"
+                    },
+                    "children": []
+                  }
+                ]
+              },
+              {
+                "tag": "td",
+                "text": "다음",
+                "attributes": {
+                  "class": [
+                    "pgR"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "a",
+                    "text": "다음",
+                    "attributes": {
+                      "href": "/item/news_news.naver?code=270660&page=11&clusterId=",
+                      "onclick": "clickcr(this,'stn.npag','','',event);"
+                    },
+                    "children": [
+                      {
+                        "tag": "img",
+                        "text": "",
+                        "attributes": {
+                          "src": "https://ssl.pstatic.net/static/n/cmn/bu_pgarR.gif",
+                          "width": "3",
+                          "height": "5",
+                          "alt": "",
+                          "border": "0"
+                        },
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "tag": "td",
+                "text": "맨뒤",
+                "attributes": {
+                  "class": [
+                    "pgRR"
+                  ]
+                },
+                "children": [
+                  {
+                    "tag": "a",
+                    "text": "맨뒤",
+                    "attributes": {
+                      "href": "/item/news_news.naver?code=270660&page=12&clusterId=",
+                      "onclick": "clickcr(this,'stn.npag','','',event);"
+                    },
+                    "children": [
+                      {
+                        "tag": "img",
+                        "text": "",
+                        "attributes": {
+                          "src": "https://ssl.pstatic.net/static/n/cmn/bu_pgarRR.gif",
+                          "width": "8",
+                          "height": "5",
+                          "alt": "",
+                          "border": "0"
+                        },
+                        "children": []
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tag": "script",
+        "text": "jindo.$Fn(function(){\n\t\tparentHeightResize();\n\n\t\t// _replaceNewsLink class 하위의 a 태그 조회 후 redirect\n\t\tjindo.$$(\"._replaceNewsLink a\").forEach(function(ele){\n\t\t\tvar urls = ele.href.split(\"?\");\n\t\t\tif (urls[0].indexOf(\"/news_read.naver\") > 0 || urls[0].indexOf(\"/newsRead.naver\") > 0) {\n\t\t\t\tvar param = jindo.$S(urls[1]).parseString();\n\t\t\t\tvar oid = param.office_id ? param.office_id : param.officeId;\n\t\t\t\tvar aid = param.article_id ? param.article_id : param.articleId;\n\n\t\t\t\tele.target = \"_blank\";\n\t\t\t\tele.href = jindo.$S(\"https://n.news.naver.com/mnews/article/%s/%s\").format(oid, aid);\n\t\t\t}\n\t\t});\n\n\t}).attach(window, 'load');",
+        "attributes": {
+          "type": "text/javascript"
+        },
+        "children": []
+      },
+      {
+        "tag": "script",
+        "text": "var targetWindow = window.top;\n\tvar targetOrigin = location.protocol+'//'+location.host;\n\n\tfunction parentHeightResize(height) {\n\t\twindow.scrollTo(0, 0);\n\t\ttargetWindow.postMessage({\n\t\t\t\"type\":\"syncHeight\",\n\t\t\t\"height\": (height) ? height : document.body.offsetHeight\n\t\t}, targetOrigin);\n\t}\n\n\tfunction parentScrollTo(to) {\n\t\ttargetWindow.postMessage({\n\t\t\t\"type\":\"syncScrollTo\",\n\t\t\t\"to\": to\n\t\t}, targetOrigin);\n\t}\n\n\t// iframe의 사이즈가 갱신되기 위해서 dom load되기전 300으로 먼저 수정\n\tparentHeightResize(300);",
+        "attributes": {},
+        "children": []
+      }
+    ]
+  }
+]
