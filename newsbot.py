@@ -2,7 +2,7 @@ import json
 import os
 import logging
 import traceback
-from datetime import datetime
+from datetime import datetime, timedelta
 from concurrent.futures import ThreadPoolExecutor
 from flask import Flask
 from newsbot_logics import get_news, unpack_watchlist, filter_news_by_time, filter_reports_date, build_news_section_html, build_reports_section_html, unpack_last_message, get_duplicated_topic_score
@@ -60,8 +60,103 @@ logger.info(f"API_KEY present: {bool(API_KEY)}")
     
 #     return 
 
-def send_news():
-    pass # will be implemented later
+def send_news(myCloud=None, watchlist=None):
+    """
+    Send a digest of the previous day's news for every company in the watchlist.
+    This runs once at around 06:30 to provide a full-day recap.
+    """
+    try:
+        logger.info("=== Preparing previous day's news digest ===")
+        if not BOT_TOKEN or not CHAT_ID:
+            logger.error("Missing BOT_TOKEN or CHAT_ID; aborting send_news.")
+            return False
+
+        if myCloud is None:
+            logger.info("CloudFinder not provided; initializing a new instance for send_news.")
+            myCloud = CloudFinder("run-sources-timefolionotify-asia-northeast3")
+
+        if watchlist is None:
+            logger.info("Watchlist not provided; loading via CloudFinder for send_news.")
+            watchlist = myCloud.load("watchlist.json", local=running_local)
+
+        if not watchlist:
+            logger.warning("Watchlist unavailable; cannot send previous day's news.")
+            return False
+
+        d6_codes, _ = unpack_watchlist(watchlist)
+        if not d6_codes:
+            logger.warning("No stock codes found in watchlist; skipping send_news.")
+            return False
+
+        stock_codes = list(d6_codes.values())
+        stock_code_to_name = {code: name for name, code in d6_codes.items()}
+        logger.info(f"Preparing news digest for {len(stock_codes)} stocks.")
+
+        with ThreadPoolExecutor() as executor:
+            news_results = list(executor.map(get_news, stock_codes))
+
+        yesterday = datetime.now() - timedelta(days=1)
+        yesterday_date = yesterday.date()
+        news_by_corp = {}
+
+        for idx, news_list in enumerate(news_results):
+            corp_name = stock_code_to_name[stock_codes[idx]]
+            if not news_list:
+                continue
+
+            deduplicated = []
+            for news in news_list:
+                news_date_str = news.get('date')
+                try:
+                    news_dt = datetime.strptime(news_date_str, "%Y.%m.%d %H:%M")
+                except Exception:
+                    continue
+
+                if news_dt.date() != yesterday_date:
+                    continue
+
+                prev_titles = [item['title'] for item in deduplicated]
+                score, _ = get_duplicated_topic_score(news['title'], prev_titles)
+                if score < 0.3:
+                    deduplicated.append(news)
+
+            if deduplicated:
+                news_by_corp[corp_name] = deduplicated
+
+        if not news_by_corp:
+            logger.info("No previous day's news found; skipping digest send.")
+            return "No previous day news found"
+
+        header = yesterday.strftime("%Y.%m.%d")
+        message_lines = [f"<b>{header} 주요 뉴스 요약입니다.</b>"]
+        total_news = 0
+
+        for corp_name, news_list in news_by_corp.items():
+            message_lines.append(f"[{corp_name}]")
+            for news in news_list:
+                total_news += 1
+                title = news['title'].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+                url_href = (news.get('url') or '').replace('&', '&amp;').replace('"', '&quot;')
+                if url_href:
+                    message_lines.append(f"- <a href=\"{url_href}\">{title}</a>")
+                else:
+                    message_lines.append(f"- {title}")
+            message_lines.append("")  # Blank line between companies
+
+        message = "\n".join([line for line in message_lines if line is not None]).strip()
+
+        if total_news == 0:
+            logger.info("No news items after formatting; skipping digest send.")
+            return "No previous day news found"
+
+        bot = ChatBot(BOT_TOKEN)
+        bot.send_message(CHAT_ID, message)
+        logger.info(f"Previous day's news digest sent successfully ({total_news} items).")
+        return "Previous day news sent"
+
+    except Exception as exc:
+        logger.error(f"Failed to send previous day's news: {exc}")
+        return f"Error sending previous day news: {exc}"
 
 def run_newsbot():
     try:
@@ -87,7 +182,8 @@ def run_newsbot():
         # 6:30 - 6:35 : Print news
         current_time = datetime.now()
         if current_time.hour == 6 and current_time.minute >=30 and current_time.minute <= 35:
-            send_news()
+            send_result = send_news(myCloud=myCloud, watchlist=watchlist)
+            logger.info(f"send_news result: {send_result}")
 
 
         printed_news, printed_reports = unpack_last_message(last_message)
