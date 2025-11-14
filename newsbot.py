@@ -9,56 +9,59 @@ from newsbot_logics import get_news, unpack_watchlist, filter_news_by_time, filt
 from utilitylib.telegram import ChatBot
 from utilitylib.finder import CloudFinder
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-
-app = Flask(__name__)
-
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 API_KEY = os.getenv("API_KEY")
-
-# Try to import from config.py if env vars are not set (for local development)
-if BOT_TOKEN is None:
-    try:
-        from config import BOT_TOKEN
-    except ImportError:
-        logger.warning("BOT_TOKEN not set in environment and config.py not found")
-if CHAT_ID is None:
-    try:
-        from config import CHAT_ID
-    except ImportError:
-        logger.warning("CHAT_ID not set in environment and config.py not found")
-if API_KEY is None:
-    try:
-        from config import API_KEY
-    except ImportError:
-        logger.warning("API_KEY not set in environment and config.py not found")
-
-# Validate environment variables - check if they got concatenated (common PowerShell issue)
-if BOT_TOKEN and ("CHAT_ID=" in BOT_TOKEN or "API_KEY=" in BOT_TOKEN or "RUNNING_LOCAL=" in BOT_TOKEN):
-    logger.error("ERROR: Environment variables appear to be concatenated!")
-    logger.error(f"BOT_TOKEN value looks malformed: {BOT_TOKEN[:50]}...")
-    logger.error("This usually happens when PowerShell doesn't parse --set-env-vars correctly.")
-    logger.error("Try using quotes or update-env-vars instead of set-env-vars")
-
 running_local = os.getenv("RUNNING_LOCAL", "false").lower() == "true"
 
+if BOT_TOKEN is None:
+    try: from config import BOT_TOKEN
+    except ImportError: logger.warning("OS variable not found!")
+if CHAT_ID is None:
+    try: from config import CHAT_ID
+    except ImportError: logger.warning("OS variable not found!")
+if API_KEY is None:
+    try: from config import API_KEY
+    except ImportError: logger.warning("OS variable not found!")
+
+app = Flask(__name__)
 logger.info(f"Initialized with running_local={running_local}")
 logger.info(f"BOT_TOKEN present: {bool(BOT_TOKEN)}")
 logger.info(f"CHAT_ID present: {bool(CHAT_ID)}")
 logger.info(f"API_KEY present: {bool(API_KEY)}")
 
-# Final validation
-if not BOT_TOKEN or not CHAT_ID or not API_KEY:
-    logger.error("CRITICAL: Missing required environment variables!")
-    logger.error(f"BOT_TOKEN: {'SET' if BOT_TOKEN else 'MISSING'}")
-    logger.error(f"CHAT_ID: {'SET' if CHAT_ID else 'MISSING'}")
-    logger.error(f"API_KEY: {'SET' if API_KEY else 'MISSING'}")
+# def compare(old_dict, old_key, new_dict, new_key, old_dict_is = "ignored"):
+#     old_values_list = []
+#     for _, corp_prints in old_dict.items():
+#         for single_print in corp_prints:
+#             old_values_list.append(single_print.get(old_key))
+    
+#     if old_dict_is == "ignored": 
+#         concat_dict = new_dict
+#         new_values_list = []
+#     elif old_dict_is == "used":
+#         concat_dict = {**old_dict, **new_dict}
+#         new_values_list = old_values_list.copy()
+    
+#     for _, corp_prints in concat_dict.items():
+#         for single_print in corp_prints:
+#             new_values_list.append(single_print.get(new_key))
+    
+#     is_new_item = False
+#     for new_value in new_values_list:
+#         if new_value not in old_values_list:
+#             is_new_item = True
+#             break
+    
+#     return 
+
+def send_news():
+    pass # will be implemented later
 
 def run_newsbot():
     try:
@@ -67,44 +70,26 @@ def run_newsbot():
         logger.info("Step 1: Initializing CloudFinder")
         myCloud = CloudFinder("run-sources-timefolionotify-asia-northeast3")
         
-        # Check if we need to reset last_message.json (between 00:00 and 00:05)
+        # 00:00 - 00:05 : Reset last_message.json
         current_time = datetime.now()
-        current_hour = current_time.hour
-        current_minute = current_time.minute
-        should_reset = (current_hour == 0 and current_minute <= 5)
-        
-        if should_reset:
-            logger.info("Step 1.5: Resetting last_message.json (time is between 00:00 and 00:05)")
-            all_companies = set()
-            try:
-                watchlist_temp = myCloud.load("watchlist.json", local=running_local)
-                if watchlist_temp:
-                    d6_codes_temp, _ = unpack_watchlist(watchlist_temp)
-                    all_companies = set(d6_codes_temp.keys())
-            except:
-                pass
-            reset_data = {
-                "printed_news": {name: [] for name in all_companies} if all_companies else {},
-                "printed_reports": {name: [] for name in all_companies} if all_companies else {}
-            }
+        if current_time.hour == 0 and current_time.minute <= 5:
+            reset_data = {"printed_news": {}, "printed_reports": {}}
             myCloud.save(reset_data, "last_message.json", local=running_local)
             logger.info("last_message.json reset successfully")
         
-        logger.info("Step 2: Loading watchlist.json")
         watchlist = myCloud.load("watchlist.json", local=running_local)
-        if not watchlist:
-            logger.error("Failed to load watchlist.json")
-            return "Error: Failed to load watchlist.json"
-        logger.info(f"Watchlist loaded successfully. Companies: {list(watchlist.keys()) if isinstance(watchlist, dict) else 'N/A'}")
+        if not watchlist: return False
+        logger.info(f"Watchlist loaded successfully")
         
-        logger.info("Step 3: Loading last_message.json")
         last_message = myCloud.load("last_message.json", local=running_local)
-        if last_message is False:
-            logger.warning("Failed to load last_message.json, using empty dict")
-            last_message = {}
         logger.info("Last message loaded successfully")
         
-        # Unpack last_message early to use printed_news for deduplication
+        # 6:30 - 6:35 : Print news
+        current_time = datetime.now()
+        if current_time.hour == 6 and current_time.minute >=30 and current_time.minute <= 35:
+            send_news()
+
+
         printed_news, printed_reports = unpack_last_message(last_message)
 
         logger.info("Step 4: Unpacking watchlist")
