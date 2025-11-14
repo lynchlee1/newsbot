@@ -1,0 +1,24 @@
+# Deploy command (Bash/Linux/Mac/Git Bash):
+
+gcloud run deploy news-telegram-bot \
+  --source . \
+  --region asia-northeast3 \
+  --allow-unauthenticated \
+  --memory=1Gi \
+  --cpu=1 \
+  --timeout=300 \
+  --set-env-vars BOT_TOKEN=your-bot-token,CHAT_ID=your-chat-id,API_KEY=your-api-key,RUNNING_LOCAL=false
+
+# Get the service URL after deployment:
+SERVICE_URL=$(gcloud run services describe news-telegram-bot --region=asia-northeast3 --format="value(status.url)")
+
+# Then create Cloud Scheduler to call it every 30 minutes:
+gcloud scheduler jobs create http newsbot-scheduler \
+  --location=asia-northeast3 \
+  --schedule="*/30 * * * *" \
+  --uri="${SERVICE_URL}" \
+  --http-method=GET \
+  --time-zone="Asia/Seoul"
+
+# For PowerShell, use DEPLOY.ps1 instead
+

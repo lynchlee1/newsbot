@@ -1,11 +1,11 @@
 import re
 import os
 import requests
-from datetime import datetime
+from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 
 '''
-뉴스 제목 중복 방지
+뉴스 제목 중복 방지, 뉴스 시간 필터링
 '''
 def get_duplicated_topic_score_list(curr_topic: str, prev_topics: list[str]):
     # Check if the current topic is duplicated with the previous topics.
@@ -25,6 +25,16 @@ def get_duplicated_topic_score(curr_topic: str, prev_topics: list[str]):
     if len(duplicates) == 0: return 0, total_keywords
     return max(duplicates) / total_keywords, total_keywords
 
+
+def filter_news_by_time(news_list: list, days: int = 0, hours: int = 0, minutes: int = 0):
+    threshold = datetime.now() - timedelta(days=days, hours=hours, minutes=minutes)
+    filtered = []
+    for news in news_list:
+        try:
+            news_date = datetime.strptime(news['date'], "%Y.%m.%d %H:%M")
+            if news_date >= threshold: filtered.append(news)
+        except: pass
+    return filtered
 
 '''
 데이터 -> 텔레그램 텍스트 변환
@@ -71,10 +81,7 @@ def build_news_section_html(news_today_by_corp: dict):
 '''
 공시 데이터 가져오기
 '''
-DART_API_KEY = os.getenv("DART_API_KEY")
-if DART_API_KEY is None:
-    from config import DART_API_KEY
-def get_reports_date(date, dart_api_key=DART_API_KEY):
+def get_reports_date(date, dart_api_key):
     base_url = f"https://opendart.fss.or.kr/api/list.json?crtfc_key={dart_api_key}&bgn_de={date}&end_de={date}&page_count=100"
     
     results = []
@@ -95,7 +102,7 @@ def get_reports_date(date, dart_api_key=DART_API_KEY):
         else: page_no += 1
     return results
 
-def filter_reports_date(date, watchlist, dart_api_key=DART_API_KEY):
+def filter_reports_date(date, watchlist, dart_api_key):
     full_reports = get_reports_date(date, dart_api_key=dart_api_key)
 
     results = {}

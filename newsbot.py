@@ -1,244 +1,164 @@
-import sys
+import json
+import os
+import logging
 import traceback
+from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
+from flask import Flask
+from newsbot_logics import get_news, unpack_watchlist, filter_news_by_time, filter_reports_date, build_news_section_html, build_reports_section_html, unpack_last_message, get_duplicated_topic_score
+from utilitylib.telegram import ChatBot
+from utilitylib.finder import CloudFinder
 
-try:
-    # Set up GCP authentication first (before importing GCS)
-    import gcp_auth
-    gcp_auth.setup_gcp_credentials()
-    print("NEWSBOT: GCP authentication set up", flush=True)
-    
-    from os import name
-    from datetime import datetime, timedelta
-    from concurrent.futures import ThreadPoolExecutor, as_completed
-    print("NEWSBOT: Imports started...", flush=True)
-    from utilitylib.gcshandler import GCS
-    print("NEWSBOT: GCS imported", flush=True)
-    from pslib import (
-        get_news,
-        get_reports,
-        build_reports_section_html,
-        build_news_section_html,
-        send_message,
-        get_duplicated_topic_score,
-        KOR_TIMEZONE,
-        unpack_watchlist,
-        unpack_last_message,
-        inv_get_corp,
-        get_corp,
-        read_reports,
-        read_news,
-    )
-    print("NEWSBOT: All imports successful", flush=True)
-except Exception as e:
-    print(f"ERROR: Failed to import modules: {e}", flush=True)
-    print(traceback.format_exc(), flush=True)
-    sys.exit(1)
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
+app = Flask(__name__)
 
-def reset_last_message(gcs_project, is_local=False):
-    reset_data = {
-        "printed_news": {},
-        "printed_reports": {},
-    }
-    gcs_project.save(reset_data, "last_message.json", local=is_local)
-    return reset_data
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
+API_KEY = os.getenv("API_KEY")
+if BOT_TOKEN is None:
+    from config import BOT_TOKEN
+if CHAT_ID is None:
+    from config import CHAT_ID
+if API_KEY is None:
+    from config import API_KEY
 
-def thread_news(stockcode, loaded_watchlist, printed_news, news_day_length):
-    any_changes = False
+running_local = os.getenv("RUNNING_LOCAL", "false").lower() == "true"
 
-    corp_name = inv_get_corp(loaded_watchlist, stockcode)
-    if not corp_name: 
-        return None, None, any_changes
+logger.info(f"Initialized with running_local={running_local}")
+logger.info(f"BOT_TOKEN present: {bool(BOT_TOKEN)}")
+logger.info(f"CHAT_ID present: {bool(CHAT_ID)}")
+logger.info(f"API_KEY present: {bool(API_KEY)}")
 
-    new_datas = get_news(stockcode)
-    new_datas, new_codes = read_news(new_datas)
-
-    old_datas = get_corp(printed_news, corp_name)
-    mixed_datas = old_datas.copy() if old_datas else []
-    old_urls = set(item.get("url", "") for item in mixed_datas if item.get("url", ""))
-    prev_titles = [item.get("title", "") for item in mixed_datas]
-
-    current_time = datetime.now(KOR_TIMEZONE)
-    time_threshold = timedelta(days=news_day_length, hours=3, minutes=0)
-
-    for new_data in new_datas:
-        date_str = new_data.get("date", "").strip()
-        if date_str:
-            try:
-                item_dt = datetime.strptime(date_str, "%Y.%m.%d %H:%M").replace(tzinfo=KOR_TIMEZONE)
-                if current_time - item_dt > time_threshold: continue
-            except Exception: continue
-        else: continue
-
-        new_url = new_data.get("url", "")
-        if new_url in old_urls: continue
+def run_newsbot():
+    try:
+        logger.info("=== Starting newsbot execution ===")
         
-        score, total_keywords = get_duplicated_topic_score(new_data.get("title", ""), prev_titles)
-        if score > 0.33 or total_keywords < 6:
-            continue
-        any_changes = True
-        mixed_datas.append(new_data)
-        old_urls.add(new_url)
-        prev_titles.append(new_data.get("title", ""))
-    
-    return corp_name, mixed_datas, any_changes
+        logger.info("Step 1: Initializing CloudFinder")
+        myCloud = CloudFinder("run-sources-timefolionotify-asia-northeast3")
+        
+        logger.info("Step 2: Loading watchlist.json")
+        watchlist = myCloud.load("watchlist.json", local=running_local)
+        if not watchlist:
+            logger.error("Failed to load watchlist.json")
+            return "Error: Failed to load watchlist.json"
+        logger.info(f"Watchlist loaded successfully. Companies: {list(watchlist.keys()) if isinstance(watchlist, dict) else 'N/A'}")
+        
+        logger.info("Step 3: Loading last_message.json")
+        last_message = myCloud.load("last_message.json", local=running_local)
+        if last_message is False:
+            logger.warning("Failed to load last_message.json, using empty dict")
+            last_message = {}
+        logger.info("Last message loaded successfully")
 
-def thread_report(stockcode, loaded_watchlist, printed_reports, report_day_length):
-    any_changes = False
+        logger.info("Step 4: Unpacking watchlist")
+        d6_codes, d8_codes = unpack_watchlist(watchlist)
+        stock_code_to_name = {code: name for name, code in d6_codes.items()}
+        stock_codes = list(d6_codes.values())
+        logger.info(f"Unpacked {len(stock_codes)} stock codes")
 
-    corp_name = inv_get_corp(loaded_watchlist, stockcode)
-    if not corp_name: return None, None, any_changes
+        logger.info("Step 5: Fetching news for all companies")
+        with ThreadPoolExecutor() as executor:
+            news_results = list(executor.map(get_news, stock_codes))
+        logger.info(f"Fetched news for {len(news_results)} companies")
 
-    new_datas = get_reports(stockcode, past_days=report_day_length)
-    new_datas, new_codes = read_reports(new_datas)
+        logger.info("Step 6: Filtering and deduplicating news")
+        news_by_corp = {}
+        for i, news_list in enumerate(news_results):
+            corp_name = stock_code_to_name[stock_codes[i]]
+            filtered = filter_news_by_time(news_list, hours=2)
+            if filtered:
+                deduplicated = []
+                for news in filtered:
+                    prev_titles = [item['title'] for item in deduplicated]
+                    score, _ = get_duplicated_topic_score(news['title'], prev_titles)
+                    if score < 0.3:
+                        deduplicated.append(news)
+                if deduplicated:
+                    news_by_corp[corp_name] = deduplicated
+        logger.info(f"Filtered news for {len(news_by_corp)} companies")
 
-    old_datas = get_corp(printed_reports, corp_name)     
-    if old_datas and len(old_datas) > 0:
-        old_datas_list = old_datas.copy()
-        old_urls = set(item.get("url", "") for item in old_datas if item.get("url"))
+        logger.info("Step 7: Fetching reports")
+        today = datetime.now().strftime("%Y%m%d")
+        logger.info(f"Fetching reports for date: {today}")
+        reports_by_corp_raw = filter_reports_date(today, d8_codes, dart_api_key=API_KEY)
+        reports_by_corp = {name: [report] if report else [] for name, report in reports_by_corp_raw.items()}
+        logger.info(f"Fetched reports for {len([r for r in reports_by_corp.values() if r])} companies")
 
-    else:
-        old_datas_list = []
-        old_urls = set()
-    
-    all_reports = old_datas_list.copy()    
-    for new_report in new_datas:
-        new_url = new_report.get("url", "")
-        if new_url not in old_urls:
-            all_reports.append(new_report)
-            old_urls.add(new_url)
-            any_changes = True
-    
-    return corp_name, all_reports, any_changes
+        logger.info("Step 8: Unpacking last message")
+        printed_news, printed_reports = unpack_last_message(last_message)
+        logger.info("Last message unpacked")
+
+        logger.info("Step 9: Checking for new content")
+        has_new = False
+        for corp_name, news_list in news_by_corp.items():
+            if not news_list: continue
+            last_news = printed_news.get(corp_name, [])
+            last_urls = {item.get('url') for item in last_news}
+            if any(item.get('url') not in last_urls for item in news_list):
+                has_new = True
+                logger.info(f"New news found for {corp_name}")
+                break
+
+        if not has_new:
+            for corp_name, reports_list in reports_by_corp.items():
+                if not reports_list: continue
+                last_reports = printed_reports.get(corp_name, [])
+                last_urls = {item.get('url') for item in last_reports}
+                if any(item.get('url') not in last_urls for item in reports_list):
+                    has_new = True
+                    logger.info(f"New reports found for {corp_name}")
+                    break
+
+        if has_new:
+            logger.info("Step 10: Building message and sending")
+            news_msg, _ = build_news_section_html(news_by_corp)
+            reports_msg, _ = build_reports_section_html(reports_by_corp)
+            full_msg = news_msg + "\n" + reports_msg
+            logger.info(f"Message length: {len(full_msg)} characters")
+            
+            logger.info("Step 11: Sending Telegram message")
+            bot = ChatBot(BOT_TOKEN)
+            bot.send_message(CHAT_ID, full_msg)
+            logger.info("Telegram message sent successfully")
+            
+            logger.info("Step 12: Saving last_message.json")
+            all_companies = set(d6_codes.keys())
+            complete_news = {name: news_by_corp.get(name, []) for name in all_companies}
+            complete_reports = {name: reports_by_corp.get(name, []) for name in all_companies}
+            save_result = myCloud.save({"printed_news": complete_news, "printed_reports": complete_reports}, "last_message.json", local=running_local)
+            if not save_result:
+                logger.error("Failed to save last_message.json")
+            else:
+                logger.info("last_message.json saved successfully")
+            
+            logger.info("=== Newsbot execution completed successfully ===")
+            return "Message sent successfully"
+        else:
+            logger.info("No new information found. Skipping update.")
+            return "No new information found. Skipping update."
+            
+    except Exception as e:
+        error_msg = f"Error in run_newsbot: {str(e)}\n{traceback.format_exc()}"
+        logger.error(error_msg)
+        return f"Error: {str(e)}"
+
+@app.route("/", methods=["GET", "POST"])
+def main():
+    try:
+        logger.info("=== Received request at / endpoint ===")
+        result = run_newsbot()
+        logger.info(f"Request completed with result: {result[:100]}...")
+        return result
+    except Exception as e:
+        error_msg = f"Error in main route: {str(e)}\n{traceback.format_exc()}"
+        logger.error(error_msg)
+        return f"Error: {str(e)}", 500
 
 if __name__ == "__main__":
-    print("=" * 60, flush=True)
-    print("NEWSBOT: Starting execution", flush=True)
-    print("=" * 60, flush=True)
-    
-    report_day_length = 0
-    news_day_length = 0
-    any_changes_global = False
-    is_local = False
-
-    try:
-        current_project = GCS("run-sources-timefolionotify-asia-northeast3")
-        current_time = datetime.now(KOR_TIMEZONE)
-        print(f"NEWSBOT: Current time: {current_time}", flush=True)
-        
-        if current_time.hour == 0 and current_time.minute < 10:
-            print("NEWSBOT: Resetting last_message (midnight reset)", flush=True)
-            reset_last_message(current_project, is_local)
-
-        print("NEWSBOT: Loading watchlist.json", flush=True)
-        loaded_watchlist = current_project.load("watchlist.json", local=is_local)
-        if not loaded_watchlist:
-            print("ERROR: Failed to load watchlist.json", flush=True)
-            exit(1)
-        print(f"NEWSBOT: Loaded watchlist with {len(loaded_watchlist)} companies", flush=True)
-        
-        news_watchlist, report_watchlist = unpack_watchlist(loaded_watchlist)
-        print(f"NEWSBOT: News watchlist: {len(news_watchlist)} codes, Report watchlist: {len(report_watchlist)} codes", flush=True)
-
-        print("NEWSBOT: Loading last_message.json", flush=True)
-        last_message = current_project.load("last_message.json", local=is_local)
-        if not last_message:
-            print("WARNING: last_message.json not found or empty, using empty dict", flush=True)
-            last_message = {"printed_news": {}, "printed_reports": {}}
-        else:
-            print(f"NEWSBOT: Loaded last_message.json successfully", flush=True)
-        
-        printed_news, printed_reports = unpack_last_message(last_message)
-        print(f"NEWSBOT: Previous news: {len(printed_news)} companies, Previous reports: {len(printed_reports)} companies", flush=True)
-    except Exception as e:
-        print(f"ERROR: Failed to initialize: {e}", flush=True)
-        import traceback
-        print(traceback.format_exc(), flush=True)
-        exit(1)
-
-    print("NEWSBOT: Processing news threads...", flush=True)
-    news_message_args = {}
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        future_to_code = {
-            executor.submit(thread_news, code, loaded_watchlist, printed_news, news_day_length): code 
-            for code in news_watchlist
-        }
-        for future in as_completed(future_to_code):
-            try:
-                corp_name, mixed_datas, any_changes = future.result()
-                if any_changes:
-                    any_changes_global = True
-                    print(f"NEWSBOT: News changes detected for {corp_name}", flush=True)
-                if corp_name and mixed_datas is not None:
-                    news_message_args[corp_name] = mixed_datas
-            except Exception as e:
-                print(f"ERROR: Error processing news thread: {e}", flush=True)
-                import traceback
-                print(traceback.format_exc(), flush=True)
-                continue
-    
-    print(f"NEWSBOT: News processing complete. Found {len(news_message_args)} companies with data", flush=True)
-    news_message, total_news = build_news_section_html(news_message_args)
-    print(f"NEWSBOT: Total news items: {total_news}", flush=True)
-
-    print("NEWSBOT: Processing report threads...", flush=True)
-    report_message_args = {}
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        future_to_code = {
-            executor.submit(thread_report, code, loaded_watchlist, printed_reports, report_day_length): code 
-            for code in report_watchlist
-        }
-        for future in as_completed(future_to_code):
-            try:
-                corp_name, all_reports, any_changes = future.result()
-                if any_changes:
-                    any_changes_global = True
-                    print(f"NEWSBOT: Report changes detected for {corp_name}", flush=True)
-                if corp_name and all_reports is not None:
-                    # Include ALL items (old + new) in the message
-                    report_message_args[corp_name] = all_reports
-            except Exception as e:
-                print(f"ERROR: Error processing report thread: {e}", flush=True)
-                import traceback
-                print(traceback.format_exc(), flush=True)
-                continue
-    
-    print(f"NEWSBOT: Report processing complete. Found {len(report_message_args)} companies with data", flush=True)
-    report_message, total_reports = build_reports_section_html(report_message_args)
-    print(f"NEWSBOT: Total report items: {total_reports}", flush=True)
-    
-    print("=" * 60, flush=True)
-    print(f"NEWSBOT: any_changes_global = {any_changes_global}", flush=True)
-    print("=" * 60, flush=True)
-    
-    if any_changes_global:
-        try:
-            print("NEWSBOT: Sending Telegram message...", flush=True)
-            final_message = news_message + "\n" + report_message
-            send_message(final_message)
-            print("NEWSBOT: Telegram message sent successfully", flush=True)
-        except Exception as e:
-            print(f"ERROR: Failed to send Telegram message: {e}", flush=True)
-            import traceback
-            print(traceback.format_exc(), flush=True)
-        
-        try:
-            print("NEWSBOT: Saving last_message.json to GCS...", flush=True)
-            last_message = {"printed_news": {}, "printed_reports": {}}
-            last_message["printed_news"] = news_message_args
-            last_message["printed_reports"] = report_message_args
-            save_result = current_project.save(last_message, "last_message.json", local=is_local)
-            if save_result:
-                print("NEWSBOT: Successfully saved last_message.json to GCS", flush=True)
-            else:
-                print("ERROR: Failed to save last_message.json to GCS", flush=True)
-        except Exception as e:
-            print(f"ERROR: Failed to save last_message.json: {e}", flush=True)
-            import traceback
-            print(traceback.format_exc(), flush=True)
-    else:
-        print("NEWSBOT: No changes detected, skipping message send and save", flush=True)
-    
-    print("=" * 60, flush=True)
-    print("NEWSBOT: Execution completed", flush=True)
-    print("=" * 60, flush=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
