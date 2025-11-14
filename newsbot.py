@@ -35,8 +35,6 @@ logger.info(f"BOT_TOKEN present: {bool(BOT_TOKEN)}")
 logger.info(f"CHAT_ID present: {bool(CHAT_ID)}")
 logger.info(f"API_KEY present: {bool(API_KEY)}")
 
-running_local = True
-
 def run_newsbot():
     try:
         logger.info("=== Starting newsbot execution ===")
@@ -90,12 +88,12 @@ def run_newsbot():
         for corp_name, reports_list in reports_by_corp.items():
             if not reports_list: continue
             last_reports = printed_reports.get(corp_name, [])
-            last_urls = {item.get('url') for item in last_reports}
-            new_items = [item for item in reports_list if item.get('url') not in last_urls]
+            last_urls = {item.get('url') for item in last_reports if item.get('url')}
+            new_items = [item for item in reports_list if item.get('url') and item.get('url') not in last_urls]
             if new_items:
                 has_new = True
                 new_reports_by_corp[corp_name] = new_items
-                logger.info(f"New reports found for {corp_name}")
+                logger.info(f"New reports found for {corp_name}: {len(new_items)} report(s)")
 
         if has_new:
             logger.info("Step 7: Building message and sending")
