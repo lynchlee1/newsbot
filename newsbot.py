@@ -21,12 +21,30 @@ app = Flask(__name__)
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 API_KEY = os.getenv("API_KEY")
+
+# Try to import from config.py if env vars are not set (for local development)
 if BOT_TOKEN is None:
-    from config import BOT_TOKEN
+    try:
+        from config import BOT_TOKEN
+    except ImportError:
+        logger.warning("BOT_TOKEN not set in environment and config.py not found")
 if CHAT_ID is None:
-    from config import CHAT_ID
+    try:
+        from config import CHAT_ID
+    except ImportError:
+        logger.warning("CHAT_ID not set in environment and config.py not found")
 if API_KEY is None:
-    from config import API_KEY
+    try:
+        from config import API_KEY
+    except ImportError:
+        logger.warning("API_KEY not set in environment and config.py not found")
+
+# Validate environment variables - check if they got concatenated (common PowerShell issue)
+if BOT_TOKEN and ("CHAT_ID=" in BOT_TOKEN or "API_KEY=" in BOT_TOKEN or "RUNNING_LOCAL=" in BOT_TOKEN):
+    logger.error("ERROR: Environment variables appear to be concatenated!")
+    logger.error(f"BOT_TOKEN value looks malformed: {BOT_TOKEN[:50]}...")
+    logger.error("This usually happens when PowerShell doesn't parse --set-env-vars correctly.")
+    logger.error("Try using quotes or update-env-vars instead of set-env-vars")
 
 running_local = os.getenv("RUNNING_LOCAL", "false").lower() == "true"
 
@@ -35,12 +53,42 @@ logger.info(f"BOT_TOKEN present: {bool(BOT_TOKEN)}")
 logger.info(f"CHAT_ID present: {bool(CHAT_ID)}")
 logger.info(f"API_KEY present: {bool(API_KEY)}")
 
+# Final validation
+if not BOT_TOKEN or not CHAT_ID or not API_KEY:
+    logger.error("CRITICAL: Missing required environment variables!")
+    logger.error(f"BOT_TOKEN: {'SET' if BOT_TOKEN else 'MISSING'}")
+    logger.error(f"CHAT_ID: {'SET' if CHAT_ID else 'MISSING'}")
+    logger.error(f"API_KEY: {'SET' if API_KEY else 'MISSING'}")
+
 def run_newsbot():
     try:
         logger.info("=== Starting newsbot execution ===")
         
         logger.info("Step 1: Initializing CloudFinder")
         myCloud = CloudFinder("run-sources-timefolionotify-asia-northeast3")
+        
+        # Check if we need to reset last_message.json (between 00:00 and 00:05)
+        current_time = datetime.now()
+        current_hour = current_time.hour
+        current_minute = current_time.minute
+        should_reset = (current_hour == 0 and current_minute <= 5)
+        
+        if should_reset:
+            logger.info("Step 1.5: Resetting last_message.json (time is between 00:00 and 00:05)")
+            all_companies = set()
+            try:
+                watchlist_temp = myCloud.load("watchlist.json", local=running_local)
+                if watchlist_temp:
+                    d6_codes_temp, _ = unpack_watchlist(watchlist_temp)
+                    all_companies = set(d6_codes_temp.keys())
+            except:
+                pass
+            reset_data = {
+                "printed_news": {name: [] for name in all_companies} if all_companies else {},
+                "printed_reports": {name: [] for name in all_companies} if all_companies else {}
+            }
+            myCloud.save(reset_data, "last_message.json", local=running_local)
+            logger.info("last_message.json reset successfully")
         
         logger.info("Step 2: Loading watchlist.json")
         watchlist = myCloud.load("watchlist.json", local=running_local)
@@ -55,6 +103,9 @@ def run_newsbot():
             logger.warning("Failed to load last_message.json, using empty dict")
             last_message = {}
         logger.info("Last message loaded successfully")
+        
+        # Unpack last_message early to use printed_news for deduplication
+        printed_news, printed_reports = unpack_last_message(last_message)
 
         logger.info("Step 4: Unpacking watchlist")
         d6_codes, d8_codes = unpack_watchlist(watchlist)
@@ -74,8 +125,11 @@ def run_newsbot():
             filtered = filter_news_by_time(news_list, hours=2)
             if filtered:
                 deduplicated = []
+                # Get previously printed news titles for this company
+                prev_printed_titles = [item.get('title', '') for item in printed_news.get(corp_name, [])]
                 for news in filtered:
-                    prev_titles = [item['title'] for item in deduplicated]
+                    # Check against both newly deduplicated items and previously printed news
+                    prev_titles = [item['title'] for item in deduplicated] + prev_printed_titles
                     score, _ = get_duplicated_topic_score(news['title'], prev_titles)
                     if score < 0.3:
                         deduplicated.append(news)
@@ -90,9 +144,8 @@ def run_newsbot():
         reports_by_corp = {name: [report] if report else [] for name, report in reports_by_corp_raw.items()}
         logger.info(f"Fetched reports for {len([r for r in reports_by_corp.values() if r])} companies")
 
-        logger.info("Step 8: Unpacking last message")
-        printed_news, printed_reports = unpack_last_message(last_message)
-        logger.info("Last message unpacked")
+        logger.info("Step 8: Using previously unpacked last message data")
+        # printed_news and printed_reports were already unpacked in Step 3
 
         logger.info("Step 9: Checking for new content")
         has_new = False
