@@ -2,7 +2,9 @@ import re
 import os
 import requests
 from datetime import datetime, timedelta
+from concurrent.futures import ThreadPoolExecutor
 from bs4 import BeautifulSoup
+from utilitylib.telegram import ChatBot
 
 '''
 뉴스 제목 중복 방지, 뉴스 시간 필터링
@@ -219,3 +221,53 @@ def unpack_last_message(loaded_data):
     printed_news = loaded_data.get("printed_news", {})
     printed_reports = loaded_data.get("printed_reports", {})
     return printed_news, printed_reports
+
+
+def send_news(myCloud, watchlist, bot_token, chat_id, last_hour):
+    d6_codes, _ = unpack_watchlist(watchlist)
+    stock_codes = list(d6_codes.values())
+    stock_code_to_name = {code: name for name, code in d6_codes.items()}
+    with ThreadPoolExecutor() as executor:
+        news_results = list(executor.map(get_news, stock_codes))
+
+    now = datetime.now()
+    cutoff = now - timedelta(hours=last_hour)
+    news_by_corp = {}
+    for idx, news_list in enumerate(news_results):
+        corp_name = stock_code_to_name[stock_codes[idx]]
+        if not news_list:
+            continue
+        deduplicated = []
+        for news in news_list:
+            news_dt = datetime.strptime(news['date'], "%Y.%m.%d %H:%M")
+            if news_dt < cutoff:
+                continue
+            titles = [item['title'] for item in deduplicated]
+            score, _ = get_duplicated_topic_score(news['title'], titles)
+            if score < 0.3:
+                deduplicated.append(news)
+        if deduplicated:
+            news_by_corp[corp_name] = deduplicated
+
+    if not news_by_corp: return None
+
+    hour_24 = now.hour
+    if hour_24 == 0: hour_str = "오후 12시"
+    elif hour_24 < 12: hour_str = f"오전 {hour_24}시"
+    elif hour_24 == 12: hour_str = "오전 12시"
+    else: hour_str = f"오후 {hour_24 - 12}시"
+    header = now.strftime("%Y.%m.%d")
+    lines = [f"<b>{header} {hour_str} 뉴스입니다.</b>"]
+    for corp_name, news_list in news_by_corp.items():
+        lines.append(f"[{corp_name}]")
+        for news in news_list:
+            title = news['title'].replace('&', '&amp;').replace('<', '&lt;').replace('>', '&gt;').replace('"', '&quot;')
+            url_href = (news.get('url') or '').replace('&', '&amp;').replace('"', '&quot;')
+            if url_href:
+                lines.append(f"- <a href=\"{url_href}\">{title}</a>")
+            else:
+                lines.append(f"- {title}")
+        lines.append("")
+
+    ChatBot(bot_token).send_message(chat_id, "\n".join(lines).strip())
+    return None
