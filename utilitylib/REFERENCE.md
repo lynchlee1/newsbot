@@ -26,18 +26,24 @@ pip install -r utilitylib/requirements.txt
 
 ### Class `ChromeDriver`
 
-Chrome Driver를 이용한 웹 자동화를 위한 기본 클래스입니다.
+크롬 드라이버를 이용한 웹 데이터 수집을 보조하는 기본 클래스입니다. 쿼리 방식보다 느리고, 클라우드 기반 실행이 어렵기 때문에 아래 내용을 참고하세요. 
+
+1. 크롬에서 수집하고 싶은 데이터를 찾으세요. 
+    - 웹사이트에 접속해서 원하는 메뉴에 들어가고, 회사 이름을 입력하고, 표를 찾는 모든 과정을 진행하세요.
+2. 해당 데이터가 보이는 상태에서 크롬 상단에 있는 현재 URL을 복사하세요.
+3. 복사한 URL에 접속했을 때 원하는 데이터가 보인다면 requests 방식이 훨씬 빠릅니다.
+    - 원하는 데이터가 보이지 않고, 회사 이름을 입력하기 이전의 기본 메뉴가 보인다면 크롬 드라이버 방식이 간편합니다. 
+    - 이 모듈이 원하시는 그 모듈이 맞습니다. 계속 진행하세요.
 
 | Parameter | Type | Default | Description |
 | --- | --- | --- | --- |
 | `headless` | `bool` | `False` | `True`인 경우 크롬 팝업 없이 백그라운드에서 실행됩니다. |
-| `timers` | `dict` | ```{"buffer_time": 0.3, "load_time": 10}``` | `buffer_time` : 클릭과 클릭 사이의 전환 속도입니다. 짧을수록 실행이 빨라지지만, 기본값보다 작으면 드라이버가 버벅임에 따라 오류 가능성이 있습니다. 느린 컴퓨터에서는 `0.5`에서 `1.0` 사이를 권장합니다. <br><br> `load_time` : 해당 시간동안 크롬 드라이버가 켜지지 않았을 경우 오류를 반환합니다. |
+| `timers` | `dict` | ```{"buffer_time": 0.3, "load_time": 10}``` | `buffer_time` : 클릭과 클릭 사이의 전환 속도입니다. 짧을수록 실행이 빨라지지만, 기본값보다 작으면 드라이버가 버벅임에 따라 오류 가능성이 있습니다. 느린 컴퓨터에서는 `0.5`에서 `1.0` 사이를 권장합니다. <br><br> `load_time` : 해당 시간동안 크롬 드라이버가 로딩되지 않았을 경우 오류를 반환합니다. |
 
 #### Functions
 
 - `setup()` : 크롬 드라이버를 초기화하고 설정합니다.  
     - 반환값 : 없음  
-    - 사용 전 반드시 호출해야 합니다.
 
 - `open(url)` : 지정된 URL로 이동합니다.  
     - `url`: 이동할 웹페이지 주소  
@@ -45,28 +51,25 @@ Chrome Driver를 이용한 웹 자동화를 위한 기본 클래스입니다.
 
 - `cleanup()` : 크롬 드라이버를 종료하고 리소스를 정리합니다.  
     - 반환값 : 없음  
-    - 사용 후 반드시 호출하여 메모리 누수를 방지하세요.
 
 - `switch_to_frame(frame_selector)` : 지정된 프레임으로 전환합니다.  
-    - `frame_selector`: CSS 선택자로 지정한 프레임  
+    - `frame_selector`: 전환할 프레임의 CSS Selector  
     - 반환값 : 성공시 `True`, 실패시 `False`  
-    - iframe 내부 요소에 접근하기 전에 사용합니다.
+    - 눈에 보이지만 selector로 찾았을 때 오류가 발생한다면 다른 프레임에 있을 가능성이 높습니다. <br> 주로 팝업창 안에 있을 때 발생합니다.
 
-- `switch_to_default()` : 기본 콘텐츠 영역으로 돌아갑니다.  
+- `switch_to_default()` : 기본 프레임으로 돌아갑니다.  
     - 반환값 : 성공시 `True`, 실패시 `False`  
-    - 프레임 작업 후 원래 페이지로 돌아갈 때 사용합니다.
 
-- `click_button(selector, frame="")` : CSS 선택자로 지정한 버튼을 클릭합니다.  
-    - `selector`: 클릭할 버튼의 CSS 선택자  
-    - `frame`: 프레임 내부 버튼인 경우 프레임 선택자 (선택사항)  
+- `click_button(selector, frame="")` : selector 버튼을 찾아 클릭합니다.  
+    - `selector`: 클릭할 버튼의 CSS Selector
+    - `frame`: 다른 프레임 요소일 경우 frame selector 입력 (선택사항)  
     - 반환값 : 성공시 `True`, 실패시 `False`  
-    - JavaScript를 사용하여 안정적으로 클릭합니다.
+    - JavaScript click 방식을 사용하기 때문에 버튼이 가려져 있어도 작동합니다.
 
-- `click_by_text(button_text, frame="")` : 텍스트로 버튼을 찾아 클릭합니다.  
-    - `button_text`: 버튼에 표시된 텍스트  
-    - `frame`: 프레임 내부 버튼인 경우 프레임 선택자 (선택사항)  
+- `click_by_text(button_text, frame="")` : button_text가 쓰인 버튼을 찾아 클릭합니다. 
+    - `button_text`: 버튼에 표시된 텍스트. `<button>` 또는 `<a>` 태그인 경우 작동
+    - `frame`: 다른 프레임 요소일 경우 frame selector 입력 (선택사항) 
     - 반환값 : 성공시 `True`, 실패시 `False`  
-    - `<button>` 또는 `<a>` 태그에서 텍스트를 찾아 클릭합니다.
 
 - `fill_input(selector, value, frame="")` : 입력 필드에 값을 입력합니다.  
     - `selector`: 입력 필드의 CSS 선택자  
