@@ -1,10 +1,16 @@
 import re
 import os
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from concurrent.futures import ThreadPoolExecutor
 from bs4 import BeautifulSoup
 from utilitylib.telegram import ChatBot
+from utilitylib.planner import Planner
+
+# Korean timezone (UTC+9)
+KST = timezone(timedelta(hours=9))
+def get_korean_time():
+    return datetime.now(KST)
 
 '''
 뉴스 제목 중복 방지, 뉴스 시간 필터링
@@ -29,7 +35,8 @@ def get_duplicated_topic_score(curr_topic: str, prev_topics: list[str]):
 
 
 def filter_news_by_time(news_list: list, days: int = 0, hours: int = 0, minutes: int = 0):
-    threshold = datetime.now() - timedelta(days=days, hours=hours, minutes=minutes)
+    # Get Korean time and convert to naive for comparison (scraped dates are already in Korean time)
+    threshold = get_korean_time().replace(tzinfo=None) - timedelta(days=days, hours=hours, minutes=minutes)
     filtered = []
     for news in news_list:
         try:
@@ -230,8 +237,9 @@ def send_news(myCloud, watchlist, bot_token, chat_id, last_hour):
     with ThreadPoolExecutor() as executor:
         news_results = list(executor.map(get_news, stock_codes))
 
-    now = datetime.now()
-    cutoff = now - timedelta(hours=last_hour)
+    now = get_korean_time()
+    # Convert to naive for comparison (scraped dates are already in Korean time)
+    cutoff = now.replace(tzinfo=None) - timedelta(hours=last_hour)
     news_by_corp = {}
     for idx, news_list in enumerate(news_results):
         corp_name = stock_code_to_name[stock_codes[idx]]
@@ -251,11 +259,8 @@ def send_news(myCloud, watchlist, bot_token, chat_id, last_hour):
 
     if not news_by_corp: return None
 
-    hour_24 = now.hour
-    if hour_24 == 0: hour_str = "오후 12시"
-    elif hour_24 < 12: hour_str = f"오전 {hour_24}시"
-    elif hour_24 == 12: hour_str = "오전 12시"
-    else: hour_str = f"오후 {hour_24 - 12}시"
+    planner = Planner(utc_time=9)
+    hour_str = planner.time_str(now)
     header = now.strftime("%Y.%m.%d")
     lines = [f"<b>{header} {hour_str} 뉴스입니다.</b>"]
     for corp_name, news_list in news_by_corp.items():
