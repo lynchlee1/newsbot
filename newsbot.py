@@ -2,84 +2,100 @@ import json
 import os
 import logging
 import traceback
+from datetime import datetime, timedelta, timezone
 from concurrent.futures import ThreadPoolExecutor
 from flask import Flask
-from newsbot_logics import unpack_watchlist, filter_reports_date, build_reports_section_html, unpack_last_message, send_news, get_korean_time
+from newsbot_logics import unpack_watchlist, filter_reports_date, build_reports_section_html, unpack_last_message, send_news
 from utilitylib.telegram import ChatBot
 from utilitylib.finder import CloudFinder
-from utilitylib.planner import Planner
+
+# Korean timezone (UTC+9)
+KST = timezone(timedelta(hours=9))
+def get_korean_time():
+    return datetime.now(KST)
 
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
-
 BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")
+API_KEY = os.getenv("API_KEY")
+running_local = os.getenv("RUNNING_LOCAL", "false").lower() == "true"
+
 if BOT_TOKEN is None:
     try: from config import BOT_TOKEN
     except ImportError: logger.warning("OS variable not found!")
-
-CHAT_ID = os.getenv("CHAT_ID")
 if CHAT_ID is None:
     try: from config import CHAT_ID
     except ImportError: logger.warning("OS variable not found!")
-
-API_KEY = os.getenv("API_KEY")
 if API_KEY is None:
     try: from config import API_KEY
     except ImportError: logger.warning("OS variable not found!")
 
-running_local = os.getenv("RUNNING_LOCAL", "false").lower() == "true"
-
 app = Flask(__name__)
+logger.info(f"Initialized with running_local={running_local}")
+logger.info(f"BOT_TOKEN present: {bool(BOT_TOKEN)}")
+logger.info(f"CHAT_ID present: {bool(CHAT_ID)}")
+logger.info(f"API_KEY present: {bool(API_KEY)}")
 
-logger.info("Initializing CloudFinder...")
-myCloud = CloudFinder("run-sources-timefolionotify-asia-northeast3")
-
-'''
-Define work functions.
-'''
-def work_reset_last_message():
+def run_newsbot():
     try:
-        reset_data = {"printed_news": {}, "printed_reports": {}}
-        myCloud.save(reset_data, "last_message.json", local=running_local)
-        return True
-    except Exception as e:
-        logger.error(f"Error in work_reset_last_message: {str(e)}")
-        return False
-
-
-def work_send_news(last_hour):
-    try:
+        logger.info("=== Starting newsbot execution ===")
+        
+        logger.info("Step 1: Initializing CloudFinder")
+        myCloud = CloudFinder("run-sources-timefolionotify-asia-northeast3")
+        
+        # 00:00 - 00:05 : Reset last_message.json
+        current_time = get_korean_time()
+        if current_time.hour == 0 and current_time.minute <= 5:
+            reset_data = {"printed_news": {}, "printed_reports": {}}
+            myCloud.save(reset_data, "last_message.json", local=running_local)
+            logger.info("last_message.json reset successfully")
+        
         watchlist = myCloud.load("watchlist.json", local=running_local)
-        send_news(myCloud, watchlist, BOT_TOKEN, CHAT_ID, last_hour=last_hour)
-        return True
-    except Exception as e:
-        logger.error(f"Error in work_send_news: {str(e)}")
-        return False
-
-
-def work_check_reports():
-    try:
-        watchlist = myCloud.load("watchlist.json", local=running_local)
+        if not watchlist: return False
+        logger.info(f"Watchlist loaded successfully")
+        
         last_message = myCloud.load("last_message.json", local=running_local)
+        logger.info("Last message loaded successfully")
+        
+        # Print news at 07:30-07:35 and 16:30-16:35
+        current_time = get_korean_time()
+        in_window_730 = current_time.hour == 7 and 30 <= current_time.minute <= 35
+        in_window_1630 = current_time.hour == 16 and 30 <= current_time.minute <= 35
+
+        if in_window_730:
+            logger.info(send_news(myCloud, watchlist, BOT_TOKEN, CHAT_ID, last_hour=15))
+        elif in_window_1630:
+            logger.info(send_news(myCloud, watchlist, BOT_TOKEN, CHAT_ID, last_hour=9))
+
+        # Send reports at every hh:00 (not every run)
+        is_hourly = current_time.minute <= 5  # Check within first 5 minutes of each hour
+        
+        if not is_hourly:
+            logger.info("Not at hourly interval. Skipping reports check.")
+            return "Skipped - not at hourly interval"
+
         _, printed_reports = unpack_last_message(last_message)
-        
-        logger.info("Unpacking watchlist")
+
+        logger.info("Step 4: Unpacking watchlist")
         d6_codes, d8_codes = unpack_watchlist(watchlist)
-        
-        logger.info("Fetching reports")
+        logger.info(f"Unpacked {len(d6_codes)} stock codes")
+
+        logger.info("Step 5: Fetching reports")
         today = get_korean_time().strftime("%Y%m%d")
+        logger.info(f"Fetching reports for date: {today}")
         reports_by_corp_raw = filter_reports_date(today, d8_codes, dart_api_key=API_KEY)
         reports_by_corp = {name: [report] if report else [] for name, report in reports_by_corp_raw.items()}
-        
-        logger.info("Checking for new reports")
+        logger.info(f"Fetched reports for {len([r for r in reports_by_corp.values() if r])} companies")
+
+        logger.info("Step 6: Checking for new reports")
         has_new = False
         new_reports_by_corp = {}
         for corp_name, reports_list in reports_by_corp.items():
-            if not reports_list:
-                continue
+            if not reports_list: continue
             last_reports = printed_reports.get(corp_name, [])
             last_urls = {item.get('url') for item in last_reports if item.get('url')}
             new_items = [item for item in reports_list if item.get('url') and item.get('url') not in last_urls]
@@ -87,17 +103,19 @@ def work_check_reports():
                 has_new = True
                 new_reports_by_corp[corp_name] = new_items
                 logger.info(f"New reports found for {corp_name}: {len(new_items)} report(s)")
-        
+
         if has_new:
-            logger.info("Building message and sending")
+            logger.info("Step 7: Building message and sending")
             reports_msg, _ = build_reports_section_html(new_reports_by_corp)
             full_msg = reports_msg
+            logger.info(f"Report message length: {len(full_msg)} characters")
             
-            logger.info("Sending Telegram message")
+            logger.info("Step 8: Sending Telegram message")
             bot = ChatBot(BOT_TOKEN)
             bot.send_message(CHAT_ID, full_msg)
+            logger.info("Telegram message sent successfully")
             
-            logger.info("Saving last_message.json")
+            logger.info("Step 9: Saving last_message.json")
             all_companies = set(d6_codes.keys())
             complete_reports = {name: reports_by_corp.get(name, []) for name in all_companies}
             save_result = myCloud.save({"printed_news": {}, "printed_reports": complete_reports}, "last_message.json", local=running_local)
@@ -106,60 +124,23 @@ def work_check_reports():
             else:
                 logger.info("last_message.json saved successfully")
             
-            logger.info("=== Report check completed successfully ===")
+            logger.info("=== Newsbot execution completed successfully ===")
             return "Message sent successfully"
         else:
-            logger.info("No new reports found. Skipping update.")
-            return "No new reports found. Skipping update."
+            logger.info("No new information found. Skipping update.")
+            return "No new information found. Skipping update."     
     except Exception as e:
-        error_msg = f"Error in work_check_reports: {str(e)}\n{traceback.format_exc()}"
+        error_msg = f"Error in run_newsbot: {str(e)}\n{traceback.format_exc()}"
         logger.error(error_msg)
         return f"Error: {str(e)}"
-
-
-def make_planner():
-    logger.info("Creating planner...")
-    planner = Planner(utc_time=9)
     
-    # 00:00: Reset last_message.json
-    planner.add_plan(hour=0, minute=0, buffer=5, func=work_reset_last_message, kwargs={})
-    
-    # 08:00: Send morning news (last 15 hours)
-    planner.add_plan(hour=8, minute=0, buffer=5, func=work_send_news, kwargs={"last_hour": 15})
-    
-    # 13:00: Send afternoon news (last 5 hours)
-    planner.add_plan(hour=13, minute=0, buffer=5, func=work_send_news, kwargs={"last_hour": 5})
-    
-    # 17:00: Send evening news (last 4 hours)
-    planner.add_plan(hour=17, minute=0, buffer=5, func=work_send_news, kwargs={"last_hour": 4})
-    
-    logger.info("Planner configured with all plans")
-    return planner
-
-
-def run_newsbot():
-    try:
-        logger.info("Starting newsbot execution...")
-
-        # Run scheduled tasks
-        planner = make_planner()
-        scheduled_executed = planner.run_schedule()
-        if scheduled_executed: logger.info("Scheduled task executed")
-        else: logger.info("No scheduled task matched current time")
-
-        # Run always-running tasks
-        work_check_reports()
-        return True
-
-    except Exception as e:
-        logger.error(f"Error in run_newsbot: {str(e)}")
-        return False
-
 
 @app.route("/", methods=["GET", "POST"])
 def main():
     try:
+        logger.info("=== Received request at / endpoint ===")
         result = run_newsbot()
+        logger.info(f"Request completed with result: {result[:100]}...")
         return result
     except Exception as e:
         error_msg = f"Error in main route: {str(e)}\n{traceback.format_exc()}"
