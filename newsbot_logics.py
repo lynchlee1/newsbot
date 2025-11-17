@@ -30,7 +30,7 @@ def get_duplicated_topic_score(curr_topic: str, prev_topics: list[str]):
 데이터 -> 텔레그램 텍스트 변환
 '''
 def build_reports_section_html(reports_today_by_corp: dict):
-    message = f"<b>오늘의 신규 공시입니다.</b>\n"
+    message = f"<b>다트 신규 공시입니다.</b>\n"
     total_reports = sum((len(v) for v in reports_today_by_corp.values()), 0)
     if total_reports > 0:
         for corp_name, results in reports_today_by_corp.items():

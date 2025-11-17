@@ -101,6 +101,7 @@ def thread_report(stockcode, loaded_watchlist, printed_reports, report_day_lengt
         old_datas_list = []
         old_urls = set()
     
+<<<<<<< Updated upstream
     all_reports = old_datas_list.copy()    
     for new_report in new_datas:
         new_url = new_report.get("url", "")
@@ -110,6 +111,50 @@ def thread_report(stockcode, loaded_watchlist, printed_reports, report_day_lengt
             any_changes = True
     
     return corp_name, all_reports, any_changes
+=======
+    # 07:30: Send morning news
+    planner.add_plan(hour=7, minute=30, buffer=5, func=work_send_news, kwargs={"last_hour": 15})
+    
+    # 16:30: Send afternoon news
+    planner.add_plan(hour=16, minute=30, buffer=5, func=work_send_news, kwargs={"last_hour": 9})
+    
+    logger.info("Planner configured with all plans")
+    return planner
+
+
+def run_newsbot():
+    try:
+        logger.info("Starting newsbot execution...")
+
+        # Run scheduled tasks
+        planner = make_planner()
+        scheduled_executed = planner.run_schedule()
+        if scheduled_executed: logger.info("Scheduled task executed")
+        else: logger.info("No scheduled task matched current time")
+
+        # Run work_check_reports only at hh:00 (top of each hour)
+        current_time = get_korean_time()
+        if 0<= current_time.minute <= 5:
+            work_check_reports()
+        else:
+            logger.info(f"Skipping work_check_reports (current minute: {current_time.minute}, only runs at hh:00)")
+        return True
+
+    except Exception as e:
+        logger.error(f"Error in run_newsbot: {str(e)}")
+        return False
+
+
+@app.route("/", methods=["GET", "POST"])
+def main():
+    try:
+        result = run_newsbot()
+        return result
+    except Exception as e:
+        error_msg = f"Error in main route: {str(e)}\n{traceback.format_exc()}"
+        logger.error(error_msg)
+        return f"Error: {str(e)}", 500
+>>>>>>> Stashed changes
 
 if __name__ == "__main__":
     print("=" * 60, flush=True)
